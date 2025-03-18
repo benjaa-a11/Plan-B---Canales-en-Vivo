@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function goBack() {
-    window.location.href = "canales-en-vivo.html"
+    window.location.href = "index.html"
   }
 
   async function fetchChannel(id) {
