@@ -1,1 +1,1423 @@
-
+[
+  {
+    "id": "1742010409398",
+    "name": "Telefe",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/c/cc/Telefe_%28nuevo_logo%29.png",
+    "category": "Entretenimiento",
+    "description": "Telefe es una cadena de televisión abierta argentina perteneciente al conglomerado Paramount Global, que transmite desde la localidad de Martínez, provincia de Buenos Aires. Forma parte de los siete canales de aire nacionales del país. Es el canal de mayor audiencia en Argentina y su principal competidor es Canal 13.",
+    "streamOptions": [
+      {
+        "name": "Opción 1 (FL)",
+        "url": "https://television-libre.tv/html/fl/?get=VGVsZWZlSEQ=",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:01:48.784Z",
+        "responseTime": 1076.7999999523163
+      },
+      {
+        "name": "Opción 2 (Global)",
+        "url": "https://streamtp3.com/global1.php?stream=telefe",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:01:49.485Z",
+        "responseTime": 700.5
+      },
+      {
+        "name": "Opción PC (Extensión)",
+        "url": "https://nuskt.directory/ext.html?get=VGVsZWZlSEQ=",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:01:50.211Z",
+        "responseTime": 724.8000000715256
+      },
+      {
+        "name": "Telefe Cordoba",
+        "url": "https://television-libre.tv/html/fl/?get=Q2FuYWxfOF9DQkE",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:01:50.926Z",
+        "responseTime": 715.1999999284744
+      },
+      {
+        "name": "Telefe Tucumán",
+        "url": "https://television-libre.tv/html/fl/?get=Q2FuYWxfOF9UdWN1bWFu",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:01:51.542Z",
+        "responseTime": 615.1000000238419
+      },
+      {
+        "name": "Telefe Rosario",
+        "url": "https://television-libre.tv/html/fl/?get=Q2FuYWxfNV9Sb3Nhcmlv",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:01:52.145Z",
+        "responseTime": 603.1000000238419
+      },
+      {
+        "name": "Telefe Salta",
+        "url": "https://television-libre.tv/html/fl/?get=VGVsZWZlX1NhbHRh",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:01:52.867Z",
+        "responseTime": 721.3999999761581
+      },
+      {
+        "name": "Telefe Neuquén",
+        "url": "https://television-libre.tv/html/fl/?get=VGVsZWZlX05ldXF1ZW4=",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:01:53.481Z",
+        "responseTime": 613.8999999761581
+      }
+    ],
+    "relatedChannels": [
+      {
+        "name": "Telefe Cordoba",
+        "url": "https://television-libre.tv/html/fl/?get=Q2FuYWxfOF9DQkE"
+      },
+      {
+        "name": "Telefe Tucumán",
+        "url": "https://television-libre.tv/html/fl/?get=Q2FuYWxfOF9UdWN1bWFu"
+      },
+      {
+        "name": "Telefe Rosario",
+        "url": "https://television-libre.tv/html/fl/?get=Q2FuYWxfNV9Sb3Nhcmlv"
+      },
+      {
+        "name": "Telefe Salta",
+        "url": "https://television-libre.tv/html/fl/?get=VGVsZWZlX1NhbHRh"
+      },
+      {
+        "name": "Telefe Neuquén",
+        "url": "https://television-libre.tv/html/fl/?get=VGVsZWZlX05ldXF1ZW4="
+      }
+    ],
+    "lastUpdated": "2025-03-16T06:01:53.481Z",
+    "favorite": true
+  },
+  {
+    "id": "1742010661997",
+    "name": "El Trece",
+    "logo": "https://television-libre.tv/img/eltrece.webp",
+    "category": "Entretenimiento",
+    "description": "El Canal 13 de Buenos Aires (estilizado comercialmente como eltrece) es una estación de televisión abierta argentina que transmite desde la Ciudad Autónoma de Buenos Aires. Fue fundado el 1 de octubre de 1960 operando con la licencia LS 85 TV y pertenece a la empresa Arte Radiotelevisivo Argentino (Artear), propiedad del Grupo Clarín, desde el 22 de diciembre de 1989. Es denominado popularmente «el canal del solcito», debido a su logotipo. Es el segundo canal de mayor audiencia en Argentina, solo por detrás de su principal competidor Telefe.",
+    "streamOptions": [
+      {
+        "name": "Opción 1 (FL)",
+        "url": "https://television-libre.tv/html/fl/?get=QXJ0ZWFySEQ",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:01:54.401Z",
+        "responseTime": 919.2999999523163
+      },
+      {
+        "name": "Opción 2",
+        "url": "https://embed.sdfgnksbounce.com/embed2/eltrece.html",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:01:55.119Z",
+        "responseTime": 717.5
+      },
+      {
+        "name": "Opción 3",
+        "url": "https://television-libre.tv/html/hls.html?get=aHR0cHM6Ly9saXZlLTAxLTAyLWVsdHJlY2Uudm9kZ2MubmV0L2VsdHJlY2V0di9pbmRleC5tM3U4",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:01:55.838Z",
+        "responseTime": 717.8000000715256
+      }
+    ],
+    "relatedChannels": [],
+    "lastUpdated": "2025-03-16T06:01:55.838Z",
+    "favorite": true
+  },
+  {
+    "id": "1742010812223",
+    "name": "América TV",
+    "logo": "https://television-libre.tv/img/america.webp",
+    "category": "Entretenimiento",
+    "description": "América Televisión, es un canal de televisión abierta argentino con licencia en la ciudad de La Plata, Argentina, aunque su señal es producida en la ciudad de Buenos Aires. Es también conocido por ser uno de los cinco canales abiertos que emiten desde el Área metropolitana de Buenos Aires.",
+    "streamOptions": [
+      {
+        "name": "Opción 1 (FL)",
+        "url": "https://television-libre.tv/html/fl/?get=QW1lcmljYVRW",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:01:56.450Z",
+        "responseTime": 611.6000000238419
+      }
+    ],
+    "relatedChannels": [],
+    "lastUpdated": "2025-03-16T06:01:56.451Z"
+  },
+  {
+    "id": "1742010851779",
+    "name": "TV Pública",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/a/a5/TVP_-_Televisi%C3%B3n_P%C3%BAblica_%282021%29.svg",
+    "category": "Entretenimiento",
+    "description": "El Canal 7 de Buenos Aires, más conocido como Televisión Pública y estilizado como TVP, es una estación de televisión abierta argentina que transmite desde la ciudad de Buenos Aires y que actúa como la emisora cabecera de la cadena de televisión pública de ese país.",
+    "streamOptions": [
+      {
+        "name": "Opción 1 (FL)",
+        "url": "https://television-libre.tv/html/fl/?get=Q2FuYWw3",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:01:57.066Z",
+        "responseTime": 615.3999999761581
+      },
+      {
+        "name": "Opción 2",
+        "url": "https://streamtp3.com/global1.php?stream=tv_publica",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:01:57.785Z",
+        "responseTime": 718.1999999284744
+      },
+      {
+        "name": "Opción 3",
+        "url": "https://embed.sdfgnksbounce.com/embed2/tvpublica.html",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:01:58.402Z",
+        "responseTime": 617.7000000476837
+      }
+    ],
+    "relatedChannels": [],
+    "lastUpdated": "2025-03-16T06:01:58.403Z",
+    "favorite": true
+  },
+  {
+    "id": "1742010941076",
+    "name": "El Nueve",
+    "logo": "https://television-libre.tv/img/nueve.webp",
+    "category": "Entretenimiento",
+    "description": "El Canal 9 de Buenos Aires es una estación de televisión abierta argentino que transmite desde la Ciudad Autónoma de Buenos Aires. La emisora fue inaugurada el 9 de junio de 1960. Desde 2007 hasta 2020 fue propiedad del conglomerado de medios Albavisión mediante su subsidiaria argentina Telearte",
+    "streamOptions": [
+      {
+        "name": "Opción 1 (FL)",
+        "url": "https://television-libre.tv/html/fl/?get=Q2FuYWw5&lang=1",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:01:58.908Z",
+        "responseTime": 504.7000000476837
+      }
+    ],
+    "relatedChannels": [],
+    "lastUpdated": "2025-03-16T06:01:58.908Z"
+  },
+  {
+    "id": "1742010982206",
+    "name": "TyC Sports",
+    "logo": "https://television-libre.tv/img/tyc.webp",
+    "category": "Deportes",
+    "description": "TyC Sports es un canal de televisión por suscripción argentino, el cual brinda la emisión de eventos deportivos destacados a nivel nacional e internacional. Fue lanzada al aire el 3 de septiembre de 1994 por Tele Red Imagen S.A., una empresa conjunta entre Torneos y Artear.",
+    "streamOptions": [
+      {
+        "name": "Opción 1 (FL)",
+        "url": "https://television-libre.tv/html/fl/?get=VHlDU3BvcnQ",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:01:59.422Z",
+        "responseTime": 513.6999999284744
+      },
+      {
+        "name": "Opción 2",
+        "url": "https://streamdz4.lat/player/embed.php?channel=tyc",
+        "isWorking": false,
+        "lastChecked": "2025-03-16T06:02:12.138Z",
+        "responseTime": 12715.200000047684
+      },
+      {
+        "name": "Opción 3",
+        "url": "https://streamtp3.com/global1.php?stream=tycsports",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:02:13.092Z",
+        "responseTime": 953.7000000476837
+      },
+      {
+        "name": "Opción 4",
+        "url": "https://la12hd.com/vivo/canal.php?stream=tycsports",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:02:14.558Z",
+        "responseTime": 1465.3999999761581
+      },
+      {
+        "name": "Opción 5",
+        "url": "https://tucanaldeportivo.org/tycsports-sd.php",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:02:15.701Z",
+        "responseTime": 1143.5
+      }
+    ],
+    "relatedChannels": [],
+    "lastUpdated": "2025-03-16T06:02:15.702Z",
+    "favorite": true
+  },
+  {
+    "id": "1742011059580",
+    "name": "ESPN",
+    "logo": "https://television-libre.tv/img/espn.webp",
+    "category": "Deportes",
+    "description": "ESPN (siglas de Entertainment and Sports Programming Network) es la filial latinoamericana de ese servicio de televisión por suscripción de origen estadounidense especializado en deportes. Es propiedad de ESPN Inc. (The Walt Disney Company/Hearst) y es operado por The Walt Disney Company Latin America, estando disponible a lo largo de toda América Latina.",
+    "streamOptions": [
+      {
+        "name": "Opción 1",
+        "url": "https://television-libre.tv/html/fl/?get=RVNQTjJIRA",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:02:16.730Z",
+        "responseTime": 1027.5
+      },
+      {
+        "name": "Opción 2",
+        "url": "https://la12hd.com/vivo/canal.php?stream=espn",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:02:17.549Z",
+        "responseTime": 819
+      },
+      {
+        "name": "Opción 3",
+        "url": "https://streamdz4.lat/player/embed.php?channel=espn_2",
+        "isWorking": false,
+        "lastChecked": "2025-03-16T06:02:28.616Z",
+        "responseTime": 11066.5
+      },
+      {
+        "name": "Opción 4",
+        "url": "https://streamtp3.com/global1.php?stream=espn",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:02:29.936Z",
+        "responseTime": 1320.2000000476837
+      },
+      {
+        "name": "Opción 5",
+        "url": "https://welivesport.shop/embed/espn1col.php",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:02:30.554Z",
+        "responseTime": 617.8999999761581
+      },
+      {
+        "name": "Opción 6",
+        "url": "https://tucanaldeportivo.org/espnhd.php",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:02:31.472Z",
+        "responseTime": 918
+      },
+      {
+        "name": "Opción 7",
+        "url": "https://embed.sdfgnksbounce.com/embed2/espn.html",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:02:32.091Z",
+        "responseTime": 617.8000000715256
+      },
+      {
+        "name": "Opción 8",
+        "url": "https://daddylive.mp/embed/stream-149.php",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:02:33.010Z",
+        "responseTime": 918.7000000476837
+      },
+      {
+        "name": "Opción PC (Extensión)",
+        "url": "https://nuskt.directory/ext.html?get=RVNQTjJIRA",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:02:33.723Z",
+        "responseTime": 712.7999999523163
+      }
+    ],
+    "relatedChannels": [],
+    "lastUpdated": "2025-03-16T06:02:33.723Z",
+    "favorite": true
+  },
+  {
+    "id": "1742011198632",
+    "name": "FOX Sports",
+    "logo": "https://television-libre.tv/img/foxsports.png",
+    "category": "Deportes",
+    "description": "Fox Sports es un canal de televisión por suscripción deportivo mexicano de origen estadounidense. Fue lanzado en 1995 como un bloque deportivo en la variante latinoamericana del canal FOX, en donde ofrecía los más destacados partidos de la NFL hasta 1996, cuando la cadena compró el canal deportivo Prime Deportiva para relanzarlo como Fox Sports Américas y posteriormente a Fox Sports en 1999.",
+    "streamOptions": [
+      {
+        "name": "Opción 1",
+        "url": "https://television-libre.tv/html/fl/?get=Rm94U3BvcnRz",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:02:34.340Z",
+        "responseTime": 616.6999999284744
+      },
+      {
+        "name": "Opción 2",
+        "url": "https://streamtp3.com/global1.php?stream=fox1ar",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:02:35.059Z",
+        "responseTime": 717.8999999761581
+      },
+      {
+        "name": "Opción 3",
+        "url": "https://streamdz4.lat/player/embed.php?channel=foxar",
+        "isWorking": false,
+        "lastChecked": "2025-03-16T06:02:45.922Z",
+        "responseTime": 10863
+      },
+      {
+        "name": "Opción PC",
+        "url": "https://nuskt.directory/ext.html?get=Rm94U3BvcnRz",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:02:46.628Z",
+        "responseTime": 705.3999999761581
+      }
+    ],
+    "relatedChannels": [],
+    "lastUpdated": "2025-03-16T06:02:46.628Z",
+    "favorite": true
+  },
+  {
+    "id": "1742011304282",
+    "name": "TNT Sports Premium",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/f/f4/TNT_Sports_Premium_%28Argentina%29.png",
+    "category": "Deportes",
+    "description": "TNT Sports es un canal de televisión por suscripción premium argentino. Inició sus transmisiones el 25 de agosto de 2017 y está dedicado principalmente a la emisión de la Liga Profesional de Fútbol, junto con ESPN Premium.",
+    "streamOptions": [
+      {
+        "name": "Opción 1 (FL)",
+        "url": "https://television-libre.tv/html/fl/?get=VE5UX1Nwb3J0c19IRA",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:02:47.327Z",
+        "responseTime": 698.2999999523163
+      },
+      {
+        "name": "Opción 2",
+        "url": "https://streamtp3.com/global1.php?stream=tntsports",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:02:48.065Z",
+        "responseTime": 738.1000000238419
+      },
+      {
+        "name": "Opción 3",
+        "url": "https://streamdz4.lat/player/embed.php?channel=tntar",
+        "isWorking": false,
+        "lastChecked": "2025-03-16T06:02:58.915Z",
+        "responseTime": 10849.700000047684
+      },
+      {
+        "name": "Opción 4",
+        "url": "https://la12hd.com/vivo/canal.php?stream=tntsports",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:02:59.734Z",
+        "responseTime": 819.3999999761581
+      },
+      {
+        "name": "Opción 5",
+        "url": "https://tucanaldeportivo.org/tntsports.php",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:03:00.734Z",
+        "responseTime": 999.5
+      },
+      {
+        "name": "Opción 6",
+        "url": "https://welivesport.shop/embed/tntsportarg.php",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:03:01.268Z",
+        "responseTime": 534.1000000238419
+      },
+      {
+        "name": "Opción 7",
+        "url": "https://tarjetarojaenvivo.lat/player/2/75",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:03:01.986Z",
+        "responseTime": 717.3000000715256
+      },
+      {
+        "name": "Opción PC (Extensión)",
+        "url": "https://nuskt.directory/ext.html?get=VE5UX1Nwb3J0c19IRA",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:03:02.603Z",
+        "responseTime": 616.8999999761581
+      }
+    ],
+    "relatedChannels": [],
+    "lastUpdated": "2025-03-16T06:03:02.604Z",
+    "favorite": true
+  },
+  {
+    "id": "1742011440037",
+    "name": "Disney Channel",
+    "logo": "https://television-libre.tv/img/disney.webp",
+    "category": "Infantil",
+    "description": "Disney Channel es un canal de televisión por suscripción latinoamericano de origen estadounidense de programación infantil. Se lanzó el 27 de julio de 2000 como una señal prémium; sin embargo, debido a la estrategia de expandir el canal, empezó a ser distribuido como un canal del paquete básico cuatro años después.​",
+    "streamOptions": [
+      {
+        "name": "Opción 1 (FL)",
+        "url": "https://television-libre.tv/html/fl/?get=RGlzbmV5Q2hhbm5lbEhE",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:03:03.219Z",
+        "responseTime": 614.6999999284744
+      },
+      {
+        "name": "Opción 2",
+        "url": "https://embed.sdfgnksbounce.com/embed2/disneychannel.html",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:03:03.836Z",
+        "responseTime": 617.1999999284744
+      }
+    ],
+    "relatedChannels": [],
+    "lastUpdated": "2025-03-16T06:03:03.837Z"
+  },
+  {
+    "id": "1742018633200",
+    "name": "Crónica TV",
+    "logo": "https://television-libre.tv/img/cronica.png",
+    "category": "Noticias",
+    "description": "Crónica Televisión es un canal de televisión abierta argentino orientado a las noticias, con su programación dedicada íntegramente a noticieros permanentes en vivo. Fundado por el dueño del diario de nombre homónimo, Héctor Ricardo García. Es propiedad del Grupo Olmos.​",
+    "streamOptions": [
+      {
+        "name": "Opción 1 (FL)",
+        "url": "https://television-libre.tv/html/fl/?get=Q3JvbmljYVRW",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:03:04.553Z",
+        "responseTime": 716
+      },
+      {
+        "name": "Opción 2 (YT)",
+        "url": "https://television-libre.tv/html/r/?r=aHR0cHM6Ly93d3cueW91dHViZS5jb20vZW1iZWQvYXZseTB1d1p6T0U=",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:03:05.270Z",
+        "responseTime": 716.5999999046326
+      },
+      {
+        "name": "Opción 3",
+        "url": "https://nuskt.directory/wsd/?get=CRONICA",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:03:05.876Z",
+        "responseTime": 605.6999999284744
+      }
+    ],
+    "relatedChannels": [],
+    "lastUpdated": "2025-03-16T06:03:05.876Z"
+  },
+  {
+    "id": "1742018729582",
+    "name": "C5N",
+    "logo": "https://television-libre.tv/img/c5n.webp",
+    "category": "Noticias",
+    "description": "Canal 5 Noticias, es un canal de televisión abierta de noticias argentino. Según IBOPE, es al año 2022 uno de los canales de noticias más vistos de Argentina, detrás de TN. ​​​​Fue fundado en 2007 por el empresario y periodista Daniel Hadad, y era operado a través de su conglomerado empresarial Grupo Infobae.",
+    "streamOptions": [
+      {
+        "name": "Opción 1 (FL)",
+        "url": "https://television-libre.tv/html/fl/?get=QzVO",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:03:06.594Z",
+        "responseTime": 717.2000000476837
+      }
+    ],
+    "relatedChannels": [],
+    "lastUpdated": "2025-03-16T06:03:06.594Z"
+  },
+  {
+    "id": "1742018778785",
+    "name": "TN",
+    "logo": "https://television-libre.tv/img/tn.png",
+    "category": "Noticias",
+    "description": "Todo Noticias es un canal de televisión por suscripción argentino, perteneciente al Grupo Clarín y operado por su subsidiaria Arte Radiotelevisivo Argentino.",
+    "streamOptions": [
+      {
+        "name": "Opción 1 (FL)",
+        "url": "https://television-libre.tv/html/fl/?get=VG9kb05vdGljaWFz",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:03:07.211Z",
+        "responseTime": 617.5
+      },
+      {
+        "name": "Opción 2 (YT)",
+        "url": "https://television-libre.tv/html/r/?r=aHR0cHM6Ly93d3cueW91dHViZS1ub2Nvb2tpZS5jb20vZW1iZWQvbGl2ZV9zdHJlYW0/Y2hhbm5lbD1VQ2o2UGN5THZwbklSVF8yV19td2E5QXcmYXV0b3BsYXk9MQ==",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:03:07.926Z",
+        "responseTime": 713.8000000715256
+      }
+    ],
+    "relatedChannels": [],
+    "lastUpdated": "2025-03-16T06:03:07.926Z"
+  },
+  {
+    "id": "1742018832890",
+    "name": "A24",
+    "logo": "https://television-libre.tv/img/a24.webp",
+    "category": "Noticias",
+    "description": "A24 (o América 24) es un canal de televisión abierta de noticias argentino. Es propiedad de América Multimedios, Grupo América. El canal al igual que el multimedios y sus propietarios fueron denunciados repetidas veces por estafa y lavado de dinero, y por despidos injustificados. El 7 de junio de 2009, fue entrevistado Francisco De Narváez, candidato a diputado nacional por Unión PRO y uno de los accionistas del canal. La entrevista incluyó menciones a las acusaciones por enriquecimiento ilícito que formuló el diario Página/12 sobre el candidato, repentinamente se cortó la transmisión y comenzó otro programa, posteriormente se determinó el levantamiento del ciclo en noviembre de 2009, otro programa, Lado salvaje, conducido por Reynaldo Sietecase y Maximiliano Montenegro en A24, también fue levantado.",
+    "streamOptions": [
+      {
+        "name": "Opción 1 (FL)",
+        "url": "https://television-libre.tv/html/fl/?get=QW1lcmljYTI0",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:03:08.747Z",
+        "responseTime": 820.7999999523163
+      },
+      {
+        "name": "Opción 2 (YT)",
+        "url": "https://television-libre.tv/html/r/?r=aHR0cHM6Ly93d3cueW91dHViZS5jb20vZW1iZWQvUUdwSExnUm5yeDQ=",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:03:09.463Z",
+        "responseTime": 715.5999999046326
+      }
+    ],
+    "relatedChannels": [],
+    "lastUpdated": "2025-03-16T06:03:09.463Z"
+  },
+  {
+    "id": "1742018912031",
+    "name": "ESPN Premium",
+    "logo": "https://television-libre.tv/img/espnpr.webp",
+    "category": "Deportes",
+    "description": "ESPN Premium (conocido anteriormente como Fox Sports Premium) es un canal de televisión por suscripción premium argentino dedicado a la transmisión específicamente del fútbol de ese país, junto con TNT Sports tras la alianza Fox-Turner para la televisación del fútbol argentino, el cual reemplaza al programa público Fútbol Para Todos. A partir de la cancelación de ese programa en enero de 2017, tanto Fox como Turner se convirtieron en los dueños de los derechos de teledifusión del fútbol argentino.",
+    "streamOptions": [
+      {
+        "name": "Opción 1 (FL)",
+        "url": "https://television-libre.tv/html/fl/?get=Rm94X1Nwb3J0c19QcmVtaXVuX0hE",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:03:10.181Z",
+        "responseTime": 718.1999999284744
+      },
+      {
+        "name": "Opción 2",
+        "url": "https://streamtp3.com/global1.php?stream=espnpremium",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:03:10.896Z",
+        "responseTime": 714.6000000238419
+      },
+      {
+        "name": "Opción 3",
+        "url": "https://streamdz4.lat/player/embed.php?channel=espnpremium",
+        "isWorking": false,
+        "lastChecked": "2025-03-16T06:03:21.754Z",
+        "responseTime": 10857.799999952316
+      },
+      {
+        "name": "Opción 4",
+        "url": "https://la12hd.com/vivo/canal.php?stream=espnpremium",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:03:22.466Z",
+        "responseTime": 711.1999999284744
+      },
+      {
+        "name": "Opción 5",
+        "url": "https://tucanaldeportivo.org/espnpremium.php",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:03:23.287Z",
+        "responseTime": 820.8999999761581
+      },
+      {
+        "name": "Opción 6",
+        "url": "https://welivesport.shop/embed/espnpremarg.php",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:03:23.802Z",
+        "responseTime": 515.3000000715256
+      },
+      {
+        "name": "Opción 7",
+        "url": "https://tarjetarojaenvivo.lat/player/2/76",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:03:24.620Z",
+        "responseTime": 817
+      },
+      {
+        "name": "Opción 8",
+        "url": "https://daddylive.mp/embed/stream-387.php",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:03:25.651Z",
+        "responseTime": 1030.8000000715256
+      },
+      {
+        "name": "Opción PC (Extensión)",
+        "url": "https://nuskt.directory/ext.html?get=Rm94X1Nwb3J0c19QcmVtaXVuX0hE",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:03:26.256Z",
+        "responseTime": 604.1999999284744
+      }
+    ],
+    "relatedChannels": [],
+    "lastUpdated": "2025-03-16T06:03:26.256Z",
+    "favorite": true
+  },
+  {
+    "id": "1742019110623",
+    "name": "DirecTV Sports",
+    "logo": "https://television-libre.tv/img/dsports.webp",
+    "category": "Deportes",
+    "description": "DSports es un canal de televisión por suscripción deportivo latinoamericano. Es exclusivo de la proveedora satelital DirecTV. Los programas del canal son producidos por Torneos. Emite y opera sus señales desde Argentina, Chile y Uruguay, además emite para Colombia, Ecuador, Perú y Venezuela.",
+    "streamOptions": [
+      {
+        "name": "Opción 1",
+        "url": "https://streamtp3.com/global1.php?stream=dsports",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:03:27.076Z",
+        "responseTime": 819.3000000715256
+      },
+      {
+        "name": "Opción 2",
+        "url": "https://streamdz4.lat/player/embed.php?channel=dsports_2",
+        "isWorking": false,
+        "lastChecked": "2025-03-16T06:03:37.945Z",
+        "responseTime": 10868.899999976158
+      },
+      {
+        "name": "Opción 3",
+        "url": "https://tucanaldeportivo.org/directvsports.php",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:03:38.643Z",
+        "responseTime": 697.6000000238419
+      },
+      {
+        "name": "Opción 4",
+        "url": "https://la12hd.com/vivo/canal.php?stream=dsports",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:03:39.363Z",
+        "responseTime": 720.1000000238419
+      },
+      {
+        "name": "Opción 5",
+        "url": "https://tucanaldeportivo.org/dsports-sharecast.php",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:03:40.077Z",
+        "responseTime": 713.5
+      }
+    ],
+    "relatedChannels": [],
+    "lastUpdated": "2025-03-16T06:03:40.077Z"
+  },
+  {
+    "id": "1742019279883",
+    "name": "DirecTV Sports 2",
+    "logo": "https://television-libre.tv/img/dsports2.webp",
+    "category": "Deportes",
+    "description": "DSports 2 es un canal de televisión por suscripción deportivo latinoamericano, exclusivo de la operadora de televisión satelital DirecTV. Es la segunda señal de DSports, por lo que también es canal hermano de DSports+.",
+    "streamOptions": [
+      {
+        "name": "Opción 1",
+        "url": "https://streamtp3.com/global1.php?stream=dsports2",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:03:40.796Z",
+        "responseTime": 718.8000000715256
+      },
+      {
+        "name": "Opción 3",
+        "url": "https://tucanaldeportivo.org/dsports2.php",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:03:41.665Z",
+        "responseTime": 868.9000000953674
+      },
+      {
+        "name": "Opción 4",
+        "url": "https://la12hd.com/vivo/canal.php?stream=dsports2",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:03:42.441Z",
+        "responseTime": 775.3999999761581
+      },
+      {
+        "name": "Opción 5",
+        "url": "https://embed.sdfgnksbounce.com/embed2/directvsports2.html",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:03:43.049Z",
+        "responseTime": 608.2999999523163
+      }
+    ],
+    "relatedChannels": [],
+    "lastUpdated": "2025-03-16T06:03:43.050Z"
+  },
+  {
+    "id": "1742019937893",
+    "name": "ESPN 2",
+    "logo": "https://television-libre.tv/img/espn2.webp",
+    "category": "Deportes",
+    "description": "ESPN2 es un canal de televisión por suscripción estadounidense, propiedad de ESPN Inc. que a su vez pertenece a The Walt Disney Company y Hearst Corporation.",
+    "streamOptions": [
+      {
+        "name": "Opción 1",
+        "url": "https://television-libre.tv/html/fl/?get=RVNQTjJfQXJn",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:03:43.668Z",
+        "responseTime": 618.3999999761581
+      },
+      {
+        "name": "Opción 2",
+        "url": "https://streamdz4.lat/player/embed.php?channel=espn2",
+        "isWorking": false,
+        "lastChecked": "2025-03-16T06:03:55.036Z",
+        "responseTime": 11367.100000023842
+      },
+      {
+        "name": "Opción 3",
+        "url": "https://la12hd.com/vivo/canal.php?stream=espn2",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:03:55.751Z",
+        "responseTime": 714.7000000476837
+      },
+      {
+        "name": "Opción 4",
+        "url": "https://streamtp3.com/global1.php?stream=espn2",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:03:56.570Z",
+        "responseTime": 818.8999999761581
+      },
+      {
+        "name": "Opción 5",
+        "url": "https://tucanaldeportivo.org/espn2hd.php",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:03:57.386Z",
+        "responseTime": 816.2000000476837
+      },
+      {
+        "name": "Opción 6",
+        "url": "https://futbollibretvpe.com/repro/espn2.html",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:03:57.905Z",
+        "responseTime": 518.1000000238419
+      },
+      {
+        "name": "Opción 7",
+        "url": "https://tarjetarojaenvivo.lat/player/2/88",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:03:58.612Z",
+        "responseTime": 707.7000000476837
+      },
+      {
+        "name": "Opción 8",
+        "url": "https://embed.sdfgnksbounce.com/embed2/espn2.html",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:03:59.234Z",
+        "responseTime": 621.1000000238419
+      },
+      {
+        "name": "Opción PC (Extensión)",
+        "url": "https://nuskt.directory//ext.html?get=RVNQTjJfQXJn",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:03:59.946Z",
+        "responseTime": 711.5
+      }
+    ],
+    "relatedChannels": [],
+    "lastUpdated": "2025-03-16T06:03:59.947Z"
+  },
+  {
+    "id": "1742020121251",
+    "name": "ESPN 3",
+    "logo": "https://television-libre.tv/img/espn3.webp",
+    "category": "Deportes",
+    "description": "ESPN 3 es un canal de televisión por suscripción latinoamericano de origen estadounidense lanzado el 14 de noviembre de 2011, que emite contenido deportivo.",
+    "streamOptions": [
+      {
+        "name": "Opción 1",
+        "url": "https://television-libre.tv/html/fl/?get=RVNQTjM",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:04:00.874Z",
+        "responseTime": 927.2999999523163
+      },
+      {
+        "name": "Opción 2",
+        "url": "https://streamdz4.lat/player/embed.php?channel=espn3",
+        "isWorking": false,
+        "lastChecked": "2025-03-16T06:04:12.346Z",
+        "responseTime": 11471.600000023842
+      },
+      {
+        "name": "Opción 3",
+        "url": "https://la12hd.com/vivo/canal.php?stream=espn3",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:04:13.297Z",
+        "responseTime": 951.2999999523163
+      },
+      {
+        "name": "Opción 4",
+        "url": "https://streamtp3.com/global1.php?stream=espn3",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:04:14.077Z",
+        "responseTime": 779.7999999523163
+      },
+      {
+        "name": "Opción 5",
+        "url": "https://tucanaldeportivo.org/espn3hd.php",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:04:14.900Z",
+        "responseTime": 822
+      },
+      {
+        "name": "Opción 6",
+        "url": "https://embed.sdfgnksbounce.com/embed2/espn3.html",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:04:15.717Z",
+        "responseTime": 817.7000000476837
+      }
+    ],
+    "relatedChannels": [],
+    "lastUpdated": "2025-03-16T06:04:15.718Z"
+  },
+  {
+    "id": "1742020248763",
+    "name": "ESPN 7",
+    "logo": "https://television-libre.tv/img/espn7.png",
+    "category": "Deportes",
+    "description": "ESPN 7 es un canal de televisión por suscripción latinoamericano de origen estadounidense dedicado a la programación deportiva, transmitiendo su programación desde Argentina, para Sudamérica y previamente para Centroamérica.",
+    "streamOptions": [
+      {
+        "name": "Opción 1",
+        "url": "https://television-libre.tv/html/fl/?get=Rm94U3BvcnRzMl9VWQ==",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:04:16.738Z",
+        "responseTime": 1020.1999999284744
+      },
+      {
+        "name": "Opción 2",
+        "url": "https://streamdz4.lat/player/embed.php?channel=espn7",
+        "isWorking": false,
+        "lastChecked": "2025-03-16T06:04:28.830Z",
+        "responseTime": 12092.200000047684
+      },
+      {
+        "name": "Opción 3",
+        "url": "https://la12hd.com/vivo/canal.php?stream=espn7",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:04:29.641Z",
+        "responseTime": 810.8000000715256
+      },
+      {
+        "name": "Opción 4",
+        "url": "https://streamtp3.com/global1.php?stream=espn7",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:04:30.458Z",
+        "responseTime": 816.6000000238419
+      },
+      {
+        "name": "Opción 5",
+        "url": "https://tucanaldeportivo.org/espn7.php",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:04:31.489Z",
+        "responseTime": 1030.1000000238419
+      }
+    ],
+    "relatedChannels": [],
+    "lastUpdated": "2025-03-16T06:04:31.489Z"
+  },
+  {
+    "id": "1742021815624",
+    "name": "ESPN 5",
+    "logo": "https://television-libre.tv/img/espn5.webp",
+    "category": "Deportes",
+    "description": "ESPN 5 es un canal de televisión por suscripción latinoamericano de origen estadounidense. Fue lanzado el 1 de diciembre de 2021, como reemplazo de Fox Sports en Sudamérica (excepto Argentina), Centroamérica y República Dominicana.t",
+    "streamOptions": [
+      {
+        "name": "Opción 1",
+        "url": "https://television-libre.tv/html/fl/?get=RVNQTjQ=",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:04:32.207Z",
+        "responseTime": 717.5
+      },
+      {
+        "name": "Opción 2",
+        "url": "https://streamdz4.lat/player/embed.php?channel=espn5",
+        "isWorking": false,
+        "lastChecked": "2025-03-16T06:04:43.687Z",
+        "responseTime": 11480.200000047684
+      },
+      {
+        "name": "Opción 3",
+        "url": "https://la12hd.com/vivo/canal.php?stream=espn5",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:04:44.394Z",
+        "responseTime": 705.7000000476837
+      },
+      {
+        "name": "Opción 4",
+        "url": "https://streamtp3.com/global1.php?stream=espn5",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:04:45.110Z",
+        "responseTime": 716.4000000953674
+      },
+      {
+        "name": "Opción 5",
+        "url": "https://tucanaldeportivo.org/espn5.php",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:04:46.232Z",
+        "responseTime": 1121.7999999523163
+      },
+      {
+        "name": "Opción 6",
+        "url": "https://embed.sdfgnksbounce.com/embed2/espn5.html",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:04:46.848Z",
+        "responseTime": 615.7999999523163
+      }
+    ],
+    "relatedChannels": [],
+    "lastUpdated": "2025-03-16T06:04:46.849Z"
+  },
+  {
+    "id": "1742021901688",
+    "name": "ESPN 4",
+    "logo": "https://television-libre.tv/img/espn4.webp",
+    "category": "Deportes",
+    "description": "ESPN 4 es un canal de televisión por suscripción latinoamericano de origen estadounidense. Fue lanzado el 1 de diciembre de 2021, como reemplazo de Fox Sports en Sudamérica, Centroamérica y República Dominicana; excepto México y Argentina.",
+    "streamOptions": [
+      {
+        "name": "Opción 1",
+        "url": "https://television-libre.tv/html/fl/?get=RVNQTkhE",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:04:47.436Z",
+        "responseTime": 587.4000000953674
+      },
+      {
+        "name": "Opción 2",
+        "url": "https://streamdz4.lat/player/embed.php?channel=espn4",
+        "isWorking": false,
+        "lastChecked": "2025-03-16T06:04:58.290Z",
+        "responseTime": 10853.799999952316
+      },
+      {
+        "name": "Opción 3",
+        "url": "https://la12hd.com/vivo/canal.php?stream=espn4",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:04:59.016Z",
+        "responseTime": 725
+      },
+      {
+        "name": "Opción 4",
+        "url": "https://streamtp3.com/global1.php?stream=espn4",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:04:59.831Z",
+        "responseTime": 814.8999999761581
+      },
+      {
+        "name": "Opción 5",
+        "url": "https://tucanaldeportivo.org/espn4.php",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:05:00.915Z",
+        "responseTime": 1084
+      }
+    ],
+    "relatedChannels": [],
+    "lastUpdated": "2025-03-16T06:05:00.916Z"
+  },
+  {
+    "id": "1742021972828",
+    "name": "ESPN 6",
+    "logo": "https://television-libre.tv/img/espn6.webp",
+    "category": "Deportes",
+    "description": "ESPN 6 es un canal de televisión por suscripción latinoamericano de origen estadounidense especializado en deportes. Fue lanzado el 5 de noviembre de 2012 en reemplazo de la variante latinoamericana de Speed.",
+    "streamOptions": [
+      {
+        "name": "Opción 1",
+        "url": "https://television-libre.tv/html/fl/?get=Rm94U3BvcnRzM19VWQ==",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:05:01.670Z",
+        "responseTime": 753.9000000953674
+      },
+      {
+        "name": "Opción 2",
+        "url": "https://streamdz4.lat/player/embed.php?channel=espn6",
+        "isWorking": false,
+        "lastChecked": "2025-03-16T06:05:15.110Z",
+        "responseTime": 13439.600000023842
+      },
+      {
+        "name": "Opción 3",
+        "url": "https://la12hd.com/vivo/canal.php?stream=espn6",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:05:15.940Z",
+        "responseTime": 829.3000000715256
+      },
+      {
+        "name": "Opción 4",
+        "url": "https://streamtp3.com/global1.php?stream=espn6",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:05:16.643Z",
+        "responseTime": 702.6000000238419
+      },
+      {
+        "name": "Opción 5",
+        "url": "https://tucanaldeportivo.org/espn6.php",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:05:17.361Z",
+        "responseTime": 718.6000000238419
+      }
+    ],
+    "relatedChannels": [],
+    "lastUpdated": "2025-03-16T06:05:17.362Z"
+  },
+  {
+    "id": "1742022039439",
+    "name": "FOX Sports 2",
+    "logo": "https://television-libre.tv/img/foxsports2.png",
+    "category": "Deportes",
+    "description": "Fox Sports 2 es un canal de televisión por suscripción argentino de origen estadounidense dedicado a la programación deportiva, transmitiendo su programación desde Argentina. Fue lanzado en 2009, bajo el nombre de Fox Sports+ y el 5 de noviembre de 2012, con la actual.",
+    "streamOptions": [
+      {
+        "name": "Opción 1",
+        "url": "https://television-libre.tv/html/fl/?get=Rm94U3BvcnRzMkhE",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:05:17.980Z",
+        "responseTime": 618
+      },
+      {
+        "name": "Opción 2",
+        "url": "https://streamdz4.lat/player/embed.php?channel=fox2ar",
+        "isWorking": false,
+        "lastChecked": "2025-03-16T06:05:28.832Z",
+        "responseTime": 10851.700000047684
+      },
+      {
+        "name": "Opción 3",
+        "url": "https://streamtp3.com/global1.php?stream=fox2ar",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:05:29.648Z",
+        "responseTime": 814.9000000953674
+      },
+      {
+        "name": "Opción 4",
+        "url": "https://la12hd.com/vivo/canal.php?stream=foxsports2",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:05:30.468Z",
+        "responseTime": 820
+      }
+    ],
+    "relatedChannels": [],
+    "lastUpdated": "2025-03-16T06:05:30.468Z"
+  },
+  {
+    "id": "1742022100193",
+    "name": "FOX Sports 3",
+    "logo": "https://television-libre.tv/img/foxsports3.png",
+    "category": "Deportes",
+    "description": "Fox Sports 3 es un canal de televisión por suscripción latinoamericano de origen estadounidense especializado en deportes. Fue lanzado el 5 de noviembre de 2012 en reemplazo de la variante latinoamericana de Speed.",
+    "streamOptions": [
+      {
+        "name": "Opción 1",
+        "url": "https://television-libre.tv/html/fl/?get=Rm94U3BvcnRzM0hE",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:05:31.185Z",
+        "responseTime": 716.3999999761581
+      },
+      {
+        "name": "Opción 2",
+        "url": "https://streamdz4.lat/player/embed.php?channel=fox3ar",
+        "isWorking": false,
+        "lastChecked": "2025-03-16T06:05:42.261Z",
+        "responseTime": 11076.199999928474
+      },
+      {
+        "name": "Opción 3",
+        "url": "https://la12hd.com/vivo/canal.php?stream=foxsports3",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:05:43.066Z",
+        "responseTime": 804.6999999284744
+      },
+      {
+        "name": "Opción 4",
+        "url": "https://streamtp3.com/global1.php?stream=fox3ar",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:05:43.884Z",
+        "responseTime": 818
+      }
+    ],
+    "relatedChannels": [],
+    "lastUpdated": "2025-03-16T06:05:43.885Z"
+  },
+  {
+    "id": "1742022157835",
+    "name": "Fox Sports Premium",
+    "logo": "https://television-libre.tv/img/foxpr.png",
+    "category": "Deportes",
+    "description": "Fox Sports Premium es un canal de televisión por suscripción prémium mexicano de origen estadounidense dedicado a la transmisión de eventos deportivos de pago por evento. Comenzó sus transmisiones el día 2 de abril de 2022 con la emisión del WrestleMania 38.",
+    "streamOptions": [
+      {
+        "name": "Opción 1",
+        "url": "https://nuskt.directory/mpdk/?get=aHR0cHM6Ly9vdHRiLmxpdmUuY2Yud3cuYWl2LWNkbi5uZXQvaWFkLW5pdHJvL2xpdmUvY2xpZW50cy9kYXNoL2VuYy9mZHg3NHpxemh1L291dC92MS83ZDdhOGM2OTgxYTg0MmI5OGE2ODNlOWZiZmU1MWQxNy9jZW5jLm1wZA==&key=OWYzMjdkMjRjNjZmYmQ4NGUxNWFiNWM5ZWFkN2M3YTQ=&key2=ODM4MzcxODU1MjljMGM0MDQ4ZjgxMzg2YzJkMzY0MjY=",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:05:44.706Z",
+        "responseTime": 821.2999999523163
+      },
+      {
+        "name": "Opción 2",
+        "url": "https://streamdz4.lat/player/embed.php?channel=foxpremium",
+        "isWorking": false,
+        "lastChecked": "2025-03-16T06:05:55.770Z",
+        "responseTime": 11063.299999952316
+      },
+      {
+        "name": "Opción 3",
+        "url": "https://streamtp3.com/global1.php?stream=foxsportspremium",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:05:56.475Z",
+        "responseTime": 705.2999999523163
+      },
+      {
+        "name": "Opción 4",
+        "url": "https://la12hd.com/vivo/canal.php?stream=foxsportspremium",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:05:57.192Z",
+        "responseTime": 716.7000000476837
+      },
+      {
+        "name": "Opción 5",
+        "url": "https://thedaddy.to/embed/stream-830.php",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:05:58.324Z",
+        "responseTime": 1131.3999999761581
+      },
+      {
+        "name": "Opción 6",
+        "url": "https://embed.sdfgnksbounce.com/embed2/foxsportspremium.html",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:05:58.940Z",
+        "responseTime": 615.3999999761581
+      }
+    ],
+    "relatedChannels": [],
+    "lastUpdated": "2025-03-16T06:05:58.940Z"
+  },
+  {
+    "id": "1742022272066",
+    "name": "National Geographic",
+    "logo": "https://television-libre.tv/img/natgeo.webp",
+    "category": "Documentales",
+    "description": "National Geographic, abreviado como Nat Geo, es un canal de televisión por suscripción estadounidense lanzado por National Geographic Partners el 1 de septiembre de 1997. Su programación se basa en documentales de 45 min aproximadamente sobre exploración científica, historia, naturaleza y cultura, entre otros.",
+    "streamOptions": [
+      {
+        "name": "Opción 1 (FL)",
+        "url": "https://television-libre.tv/html/fl/?get=TmF0R2VvSEQ=",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:05:59.661Z",
+        "responseTime": 720.0999999046326
+      }
+    ],
+    "relatedChannels": [],
+    "lastUpdated": "2025-03-16T06:05:59.661Z"
+  },
+  {
+    "id": "1742022336477",
+    "name": "Animal Planet",
+    "logo": "https://television-libre.tv/img/aplanet.webp",
+    "category": "Documentales",
+    "description": "Animal Planet es un canal de televisión de pago multinacional estadounidense propiedad de la unidad Warner Bros. Discovery Networks de Warner Bros. Discovery. Establecida por primera vez el 1 de junio de 1996, la red se dedica principalmente a series y documentales sobre animales salvajes y mascotas domésticas.",
+    "streamOptions": [
+      {
+        "name": "Opción 1 (FL)",
+        "url": "https://television-libre.tv/html/fl/?get=QW5pbWFsUGxhbmV0",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:06:00.880Z",
+        "responseTime": 1218.2999999523163
+      },
+      {
+        "name": "Opción 3",
+        "url": "https://nuskt.directory/wsd/?get=ANIMAL_PLANET",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:06:01.598Z",
+        "responseTime": 718.0999999046326
+      }
+    ],
+    "relatedChannels": [],
+    "lastUpdated": "2025-03-16T06:06:01.598Z"
+  },
+  {
+    "id": "1742022532748",
+    "name": "Disney Junior",
+    "logo": "https://television-libre.tv/img/disneyjr.webp",
+    "category": "Infantil",
+    "description": "Disney Junior es un canal de televisión por suscripción estadounidense propiedad de The Walt Disney Company, división de Walt Disney Television, a su vez una rama de Disney Media Networks.",
+    "streamOptions": [
+      {
+        "name": "Opción 1 (FL)",
+        "url": "https://television-libre.tv/html/fl/?get=RGlzbmV5SnI=",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:06:02.212Z",
+        "responseTime": 613.8999999761581
+      }
+    ],
+    "relatedChannels": [],
+    "lastUpdated": "2025-03-16T06:06:02.213Z"
+  },
+  {
+    "id": "1742022586783",
+    "name": "Discovery Kids",
+    "logo": "https://television-libre.tv/img/diskids.webp",
+    "category": "Infantil",
+    "description": "Discovery Kids es un canal de televisión por suscripción de origen estadounidense enfocado a la audiencia infantil. Lanzado originalmente el 7 de octubre de 1996 en Estados Unidos, es propiedad de Warner Bros. Discovery y concluyó emisiones el 10 de octubre de 2010 al ser reemplazado por The Hub.",
+    "streamOptions": [
+      {
+        "name": "Opción 1 (FL)",
+        "url": "https://television-libre.tv/html/fl/?get=RGlzY292ZXJ5X0tpZHM=",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:06:02.833Z",
+        "responseTime": 620.3999999761581
+      }
+    ],
+    "relatedChannels": [],
+    "lastUpdated": "2025-03-16T06:06:02.834Z"
+  },
+  {
+    "id": "1742023114350",
+    "name": "Volver",
+    "logo": "https://television-libre.tv/img/volver.webp",
+    "category": "Cine",
+    "description": "Volver es un canal de televisión por suscripción argentino dedicado a la transmisión de archivos de cine y televisión en Argentina.",
+    "streamOptions": [
+      {
+        "name": "Opción 1 (FL)",
+        "url": "https://television-libre.tv/html/fl/?get=Vm9sdmVy",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:06:03.647Z",
+        "responseTime": 813.6000000238419
+      }
+    ],
+    "relatedChannels": [],
+    "lastUpdated": "2025-03-16T06:06:03.648Z"
+  },
+  {
+    "id": "1742023630187",
+    "name": "HBO   directo",
+    "logo": "https://television-libre.tv/img/hbo.webp",
+    "category": "Entretenimiento",
+    "description": "HBO (siglas de Home Box Office; en inglés, «taquilla en casa») es una cadena de televisión por suscripción estadounidense, propiedad de Warner Bros. Discovery a través de su división Warner Bros. Entertainment. Es operada por Home Box Office, Inc., subsidiaria con sede en Nueva York. Su programación está basada en el estreno de películas ya exhibidas en cine y en películas y series de producción propia, entre las que destacan Los Soprano, The Wire, Six Feet Under, Band of Brothers, The Pacific, Sex and the City, True Blood, Curb your enthusiasm, Game of Thrones y Succession.",
+    "streamOptions": [
+      {
+        "name": "Opción 1 (FL)",
+        "url": "https://television-libre.tv/html/fl/?get=SEJPSEQ=",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:06:04.263Z",
+        "responseTime": 614.6000000238419
+      },
+      {
+        "name": "Opción 2",
+        "url": "https://nuskt.directory/wsd/?get=HBO",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:06:04.939Z",
+        "responseTime": 676.1000000238419
+      }
+    ],
+    "relatedChannels": [],
+    "lastUpdated": "2025-03-16T06:06:04.939Z"
+  },
+  {
+    "id": "1742023783188",
+    "name": "HBO",
+    "logo": "https://television-libre.tv/img/hbo.webp",
+    "category": "Entretenimiento",
+    "description": "HBO (siglas de Home Box Office; en inglés, «taquilla en casa») es una cadena de televisión por suscripción estadounidense, propiedad de Warner Bros. Discovery a través de su división Warner Bros. Entertainment. Es operada por Home Box Office, Inc., subsidiaria con sede en Nueva York. Su programación está basada en el estreno de películas ya exhibidas en cine y en películas y series de producción propia, entre las que destacan Los Soprano, The Wire, Six Feet Under, Band of Brothers, The Pacific, Sex and the City, True Blood, Curb your enthusiasm, Game of Thrones y Succession.",
+    "streamOptions": [
+      {
+        "name": "Opción 1 (FL)",
+        "url": "https://television-libre.tv/html/fl/?get=SEJPSEQ=",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:06:05.531Z",
+        "responseTime": 591.2999999523163
+      }
+    ],
+    "relatedChannels": [],
+    "lastUpdated": "2025-03-16T06:06:05.531Z"
+  },
+  {
+    "id": "1742023863521",
+    "name": "HBO Family",
+    "logo": "https://television-libre.tv/img/hbofam.webp",
+    "category": "Entretenimiento",
+    "description": "HBO Family es un canal de televisión por suscripción prémium latinoamericano de origen estadounidense, propiedad de Warner Bros. Discovery. Transmite contenido apto para toda la familia.",
+    "streamOptions": [
+      {
+        "name": "Opción 1 (FL)",
+        "url": "https://television-libre.tv/html/fl/?get=SEJPX0ZhbWlseQ==",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:06:06.204Z",
+        "responseTime": 672.6000000238419
+      }
+    ],
+    "relatedChannels": [],
+    "lastUpdated": "2025-03-16T06:06:06.204Z"
+  },
+  {
+    "id": "1742023924115",
+    "name": "Universal Cinema",
+    "logo": "https://television-libre.tv/img/universalcinema.webp",
+    "category": "Entretenimiento",
+    "description": "Universal+ (pronunciado como Universal Plus), es un grupo de canales de televisión por suscripción premium latinoamericano de origen estadounidense, que se centra en la emisión de películas y series de carácter exclusivo que no son vistas en otros canales.  Universal Cinema: está centrado en la emisión de películas de estreno, galardonadas, destacadas y mejor aclamadas. Posee 2 señales, Este y Oeste.",
+    "streamOptions": [
+      {
+        "name": "Opción 1 (FL)",
+        "url": "https://television-libre.tv/html/fl/?get=VW5pdmVyc2FsX0NpbmVtYQ==",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:06:07.024Z",
+        "responseTime": 820
+      }
+    ],
+    "relatedChannels": [],
+    "lastUpdated": "2025-03-16T06:06:07.025Z"
+  },
+  {
+    "id": "1742024008505",
+    "name": "Universal Crime",
+    "logo": "https://television-libre.tv/img/universalcrime.webp",
+    "category": "Entretenimiento",
+    "description": "Universal+ (pronunciado como Universal Plus), es un grupo de canales de televisión por suscripción premium latinoamericano de origen estadounidense, que se centra en la emisión de películas y series de carácter exclusivo que no son vistas en otros canales.  Universal Crime: está centrado en la emisión de series de acción, investigación y alto impacto criminal.",
+    "streamOptions": [
+      {
+        "name": "Opción 1 (FL)",
+        "url": "https://television-libre.tv/html/fl/?get=dW5pdmVyc2FsX0NyaW1l",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:06:07.850Z",
+        "responseTime": 824.9000000953674
+      }
+    ],
+    "relatedChannels": [],
+    "lastUpdated": "2025-03-16T06:06:07.851Z"
+  },
+  {
+    "id": "1742024049860",
+    "name": "Universal Comedy",
+    "logo": "https://television-libre.tv/img/universalcomedy.webp",
+    "category": "Entretenimiento",
+    "description": "Universal+ (pronunciado como Universal Plus), es un grupo de canales de televisión por suscripción premium latinoamericano de origen estadounidense, que se centra en la emisión de películas y series de carácter exclusivo que no son vistas en otros canales.  Universal Comedy: está centrado a la emisión de cine y series de comedia.",
+    "streamOptions": [
+      {
+        "name": "Opción 1 (FL)",
+        "url": "https://television-libre.tv/html/fl/?get=VW5pdmVyc2FsX0NvbWVkeQ==",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:06:08.658Z",
+        "responseTime": 807.2000000476837
+      }
+    ],
+    "relatedChannels": [],
+    "lastUpdated": "2025-03-16T06:06:08.659Z"
+  },
+  {
+    "id": "1742024096897",
+    "name": "Universal Reality",
+    "logo": "https://television-libre.tv/img/universalreality.webp",
+    "category": "Entretenimiento",
+    "description": "Universal+ (pronunciado como Universal Plus), es un grupo de canales de televisión por suscripción premium latinoamericano de origen estadounidense, que se centra en la emisión de películas y series de carácter exclusivo que no son vistas en otros canales.  Universal Reality: está centrado en la emisión de entretenimiento, game show y reality shows no guionados, la cual tiene contenido de E!.",
+    "streamOptions": [
+      {
+        "name": "Opción 1 (FL)",
+        "url": "https://television-libre.tv/html/fl/?get=VW5pdmVyc2FsX1JlYWxpdHk=",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:06:09.379Z",
+        "responseTime": 719.7999999523163
+      }
+    ],
+    "relatedChannels": [],
+    "lastUpdated": "2025-03-16T06:06:09.379Z"
+  },
+  {
+    "id": "1742024134112",
+    "name": "Universal Premiere",
+    "logo": "https://television-libre.tv/img/universalpremiere.webp",
+    "category": "Entretenimiento",
+    "description": "Universal+ (pronunciado como Universal Plus), es un grupo de canales de televisión por suscripción premium latinoamericano de origen estadounidense, que se centra en la emisión de películas y series de carácter exclusivo que no son vistas en otros canales. Universal Premiere: está centrado en la emisión de series de estreno, nuevas temporadas y series aclamadas. Posee 2 señales, Este y Oeste.",
+    "streamOptions": [
+      {
+        "name": "Opción 1 (FL)",
+        "url": "https://television-libre.tv/html/fl/?get=VW5pdmVyc2FsX1ByZW1pZXJl",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:06:09.993Z",
+        "responseTime": 614.2000000476837
+      }
+    ],
+    "relatedChannels": [],
+    "lastUpdated": "2025-03-16T06:06:09.994Z"
+  },
+  {
+    "id": "1742104745982",
+    "name": "Encuentro",
+    "logo": "https://television-libre.tv/img/encuentro.webp",
+    "category": "Entretenimiento",
+    "description": "Encuentro es un canal de televisión abierta argentino de índole cultural, lanzado el 5 de marzo de 2007. El canal se caracteriza tanto por transmitir conocimiento de variados campos educativos, científicos y culturales.",
+    "streamOptions": [
+      {
+        "name": "Opción 1 (FL)",
+        "url": "https://television-libre.tv/html/fl/?get=RW5jdWVudHJv",
+        "isWorking": true,
+        "lastChecked": "2025-03-16T06:06:10.612Z",
+        "responseTime": 617.8999999761581
+      }
+    ],
+    "relatedChannels": [],
+    "lastUpdated": "2025-03-16T06:06:10.612Z"
+  }
+]
