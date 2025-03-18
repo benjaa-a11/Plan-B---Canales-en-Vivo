@@ -15,22 +15,15 @@
     <header class="header">
       <div class="container header-container">
         <div class="header-left">
-          <button class="menu-button" id="menuButton" aria-label="Menu">
-            <i class="fas fa-bars"></i>
-          </button>
           <a href="index.html" class="logo">
-            <i class="fas fa-tv"></i>
-            Plan B
+            <img src="assets/logo.png" alt="Plan B" class="logo-img">
           </a>
-          <nav class="desktop-nav">
-            <a href="index.html" class="nav-link active">Inicio</a>
-            <a href="#" class="nav-link">Categorías</a>
-            <a href="#" class="nav-link">Favoritos</a>
-            <a href="#" class="nav-link">Programación</a>
-          </nav>
         </div>
         <div class="header-right">
-          <div class="search-container">
+          <button class="search-toggle" id="searchToggle" aria-label="Buscar">
+            <i class="fas fa-search"></i>
+          </button>
+          <div class="search-container" id="searchContainer">
             <i class="fas fa-search search-icon"></i>
             <input type="search" placeholder="Buscar canales..." class="search-input" id="searchInput">
           </div>
@@ -44,15 +37,6 @@
         </div>
       </div>
     </header>
-
-    <div class="mobile-menu" id="mobileMenu">
-      <nav class="mobile-nav">
-        <a href="index.html" class="nav-link active">Inicio</a>
-        <a href="#" class="nav-link">Categorías</a>
-        <a href="#" class="nav-link">Favoritos</a>
-        <a href="#" class="nav-link">Programación</a>
-      </nav>
-    </div>
 
     <div class="filters-panel" id="filtersPanel">
       <div class="categories-filter" id="categoriesFilter">
@@ -77,6 +61,10 @@
       <div class="channels-grid" id="channelsGrid">
         <!-- Channels will be added here by JavaScript -->
       </div>
+      
+      <div class="scroll-indicator" id="scrollIndicator">
+        <!-- Scroll dots will be added here by JavaScript -->
+      </div>
     </main>
 
     <footer class="footer">
@@ -85,6 +73,11 @@
       </div>
     </footer>
   </div>
+
+  <script src="js/canales-en-vivo.js"></script>
+</body>
+</html>
+
 
   <script src="js/canales-en-vivo.js"></script>
 </body>
