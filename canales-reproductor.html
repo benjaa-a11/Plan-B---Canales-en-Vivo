@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Plan B - Reproductor</title>
+  <meta name="description" content="Mira tus canales favoritos en vivo y en directo. Transmisiones de alta calidad.">
+  <link rel="shortcut icon" href="assets/logo.png" type="image/x-icon">
+  <link rel="stylesheet" href="css/canales-en-vivo.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+  <div class="app-container">
+    <header class="header">
+      <div class="container header-container">
+        <div class="header-left">
+          <button class="menu-button" id="menuButton" aria-label="Menu">
+            <i class="fas fa-bars"></i>
+          </button>
+          <a href="index.html" class="logo">
+            <i class="fas fa-tv"></i>
+            Plan B
+          </a>
+        </div>
+        <div class="header-right">
+          <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema">
+            <i class="fas fa-moon" id="moonIcon"></i>
+            <i class="fas fa-sun" id="sunIcon" style="display: none;"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="mobile-menu" id="mobileMenu">
+      <nav class="mobile-nav">
+        <a href="index.html" class="nav-link">Inicio</a>
+        <a href="#" class="nav-link">Categorías</a>
+        <a href="#" class="nav-link">Favoritos</a>
+        <a href="#" class="nav-link">Programación</a>
+      </nav>
+    </div>
+
+    <main class="container main-content">
+      <div class="loading-spinner" id="loadingSpinner">
+        <div class="spinner"></div>
+      </div>
+
+      <div class="player-content" id="playerContent" style="display: none;">
+        <button class="back-button" id="backButton">
+          <i class="fas fa-arrow-left"></i>
+          Volver a la lista de canales
+        </button>
+        
+        <div class="error-message" id="errorMessage" style="display: none;">
+          Esta transmisión puede tener problemas. Intenta con otra opción.
+        </div>
+        
+        <div class="player-content-flex-container">
+          <div class="player-content-main">
+            <div class="video-container">
+              <div class="video-player" id="videoPlayer">
+                <div class="video-container" id="videoContainer">
+                  <!-- Default video element -->
+                  <video id="videoElement" controls>
+                    <source src="" type="video/mp4" id="videoSource">
+                    Tu navegador no soporta la reproducción de videos.
+                  </video>
+                  
+                  <!-- Iframe for external players -->
+                  <iframe id="videoIframe" width="100%" style="aspect-ratio:16/9;margin-bottom:20px" name="iframe" title="Live Video" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen src="" scrolling="no"></iframe>
+
+                  <!-- Player controls overlay -->
+                  <div class="player-controls-overlay" id="playerControlsOverlay">
+                    <div class="player-controls">
+                      <button class="control-button" id="pipButton" aria-label="Picture in Picture">
+                        <i class="fas fa-external-link-alt"></i>
+                      </button>
+                      <button class="control-button" id="fullscreenButton" aria-label="Pantalla completa">
+                        <i class="fas fa-expand"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="player-instructions">
+              <div class="instruction-item">
+                <i class="fas fa-keyboard"></i>
+                <span>Usa las teclas <kbd>1-9</kbd> para cambiar entre opciones, <kbd>F</kbd> para pantalla completa, <kbd>ESC</kbd> para volver</span>
+              </div>
+              <div class="instruction-item">
+                <i class="fas fa-mobile-alt"></i>
+                <span>Desliza a la izquierda o derecha para cambiar entre opciones</span>
+              </div>
+            </div>
+            
+            <div class="stream-options" id="streamOptions">
+              <!-- Stream options will be added here by JavaScript -->
+            </div>
+            
+            <div class="stream-options" id="relatedChannelsContainer" style="display: none;">
+              <!-- Related channels will be added here by JavaScript -->
+            </div>
+          </div>
+          
+          <div class="player-content-sidebar">
+            <div class="channel-info-card" id="channelInfoCard">
+              <!-- Channel details will be added here by JavaScript -->
+            </div>
+            
+            <button class="primary-button" id="favoriteButton" style="width: 100%; margin-top: 1rem;">
+              <i class="far fa-heart"></i> Añadir a favoritos
+            </button>
+            
+            <div class="history-section" id="historySection" style="display: none; margin-top: 1.5rem;">
+              <h3>También viste</h3>
+              <div class="history-list" id="historyList">
+                <!-- History items will be added here by JavaScript -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="channel-not-found" id="channelNotFound" style="display: none;">
+        <p>Canal no encontrado</p>
+        <button class="primary-button" id="notFoundBackButton">Volver a la lista de canales</button>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <p>© 2025 Plan B - Canales en Vivo. Todos los derechos reservados.</p>
+      </div>
+    </footer>
+  </div>
+
+  <script src="js/canales-reproductor.js"></script>
+</body>
+</html>
+
