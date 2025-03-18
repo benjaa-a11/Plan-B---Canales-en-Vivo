@@ -1,7 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
   // DOM Elements
-  const menuButton = document.getElementById("menuButton")
-  const mobileMenu = document.getElementById("mobileMenu")
   const themeToggle = document.getElementById("themeToggle")
   const moonIcon = document.getElementById("moonIcon")
   const sunIcon = document.getElementById("sunIcon")
@@ -48,7 +46,6 @@ document.addEventListener("DOMContentLoaded", () => {
   loadViewHistory()
 
   // Event Listeners
-  menuButton.addEventListener("click", toggleMobileMenu)
   themeToggle.addEventListener("click", toggleDarkMode)
   backButton.addEventListener("click", goBack)
   notFoundBackButton.addEventListener("click", goBack)
@@ -72,10 +69,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Functions
-  function toggleMobileMenu() {
-    mobileMenu.classList.toggle("open")
-  }
-
   function toggleDarkMode() {
     const isDark = document.body.classList.toggle("dark")
 
@@ -91,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function goBack() {
-    window.location.href = "index.html"
+    window.location.href = "canales-en-vivo.html"
   }
 
   async function fetchChannel(id) {
@@ -512,16 +505,39 @@ document.addEventListener("DOMContentLoaded", () => {
       const historyItem = document.createElement("div")
       historyItem.className = "history-item"
       historyItem.addEventListener("click", () => {
-        window.location.href = `reproductor.html?id=${item.id}`
+        window.location.href = `canales-reproductor.html?id=${item.id}`
       })
+
+      // Format time ago
+      const timeAgo = getTimeAgo(new Date(item.timestamp))
 
       historyItem.innerHTML = `
         <img src="${item.logo || "placeholder.svg"}" alt="${item.name}" class="history-item-logo" loading="lazy">
-        <span class="history-item-name">${item.name}</span>
       `
 
       historyList.appendChild(historyItem)
     })
+  }
+
+  // Helper function to format time ago
+  function getTimeAgo(date) {
+    const now = new Date()
+    const diffMs = now - date
+    const diffSec = Math.floor(diffMs / 1000)
+    const diffMin = Math.floor(diffSec / 60)
+    const diffHour = Math.floor(diffMin / 60)
+    const diffDay = Math.floor(diffHour / 24)
+
+    if (diffDay > 0) {
+      return diffDay === 1 ? "Ayer" : `Hace ${diffDay} días`
+    }
+    if (diffHour > 0) {
+      return `Hace ${diffHour} h`
+    }
+    if (diffMin > 0) {
+      return `Hace ${diffMin} min`
+    }
+    return "Justo ahora"
   }
 
   // Picture-in-Picture functionality
@@ -632,34 +648,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }, 300)
     }, 3000)
   }
-
-  // Handle keyboard shortcuts
-  document.addEventListener("keydown", (e) => {
-    // Fullscreen with F key
-    if (e.key === "f" || e.key === "F") {
-      toggleFullscreen()
-    }
-
-    // Picture-in-Picture with P key
-    if (e.key === "p" || e.key === "P") {
-      togglePictureInPicture()
-    }
-
-    // Escape to go back
-    if (e.key === "Escape" && !document.fullscreenElement) {
-      goBack()
-    }
-
-    // Number keys 1-9 to switch stream options
-    if (
-      !isNaN(Number.parseInt(e.key)) &&
-      Number.parseInt(e.key) > 0 &&
-      Number.parseInt(e.key) <= channel?.streamOptions?.length
-    ) {
-      loadStream(Number.parseInt(e.key) - 1)
-      showNotification(`Cambiando a opción ${e.key}`, "info")
-    }
-  })
 
   // Add swipe gestures for mobile
   let touchStartX = 0

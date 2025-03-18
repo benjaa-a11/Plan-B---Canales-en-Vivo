@@ -1,11 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
   // DOM Elements
-  const menuButton = document.getElementById("menuButton")
-  const mobileMenu = document.getElementById("mobileMenu")
   const themeToggle = document.getElementById("themeToggle")
   const moonIcon = document.getElementById("moonIcon")
   const sunIcon = document.getElementById("sunIcon")
   const searchInput = document.getElementById("searchInput")
+  const searchToggle = document.getElementById("searchToggle")
+  const searchContainer = document.getElementById("searchContainer")
   const filterButton = document.getElementById("filterButton")
   const filtersPanel = document.getElementById("filtersPanel")
   const categoriesFilter = document.getElementById("categoriesFilter")
@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const loadingSpinner = document.getElementById("loadingSpinner")
   const noResults = document.getElementById("noResults")
   const favoritesToggle = document.getElementById("favoritesToggle")
+  const scrollIndicator = document.getElementById("scrollIndicator")
 
   // State
   let channels = []
@@ -23,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let isFiltersPanelOpen = false
   let showOnlyFavorites = false
   let viewHistory = []
-  let isGridView = true // New state for grid/list view toggle
+  let isGridView = window.innerWidth >= 768 // Grid view only for desktop
 
   // Check for dark mode preference
   const prefersDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
@@ -39,7 +40,6 @@ document.addEventListener("DOMContentLoaded", () => {
   loadViewHistory()
 
   // Event Listeners
-  menuButton.addEventListener("click", toggleMobileMenu)
   themeToggle.addEventListener("click", toggleDarkMode)
   searchInput.addEventListener("input", handleSearch)
   searchInput.addEventListener("keypress", (e) => {
@@ -47,6 +47,17 @@ document.addEventListener("DOMContentLoaded", () => {
       handleSearch(e)
     }
   })
+
+  // Search toggle for mobile
+  if (searchToggle) {
+    searchToggle.addEventListener("click", () => {
+      searchContainer.classList.toggle("active")
+      searchToggle.classList.toggle("active")
+      if (searchContainer.classList.contains("active")) {
+        searchInput.focus()
+      }
+    })
+  }
 
   if (filterButton) {
     filterButton.addEventListener("click", toggleFiltersPanel)
@@ -56,29 +67,21 @@ document.addEventListener("DOMContentLoaded", () => {
     favoritesToggle.addEventListener("click", toggleFavoritesFilter)
   }
 
-  // Add view toggle button
-  const viewToggleButton = document.createElement("button")
-  viewToggleButton.className = "filter-button"
-  viewToggleButton.setAttribute("aria-label", "Cambiar vista")
-  viewToggleButton.innerHTML = '<i class="fas fa-th-list"></i>'
-  viewToggleButton.addEventListener("click", toggleView)
+  // Add view toggle button only for desktop
+  if (window.innerWidth >= 768) {
+    const viewToggleButton = document.createElement("button")
+    viewToggleButton.className = "filter-button"
+    viewToggleButton.setAttribute("aria-label", "Cambiar vista")
+    viewToggleButton.innerHTML = '<i class="fas fa-th-list"></i>'
+    viewToggleButton.addEventListener("click", toggleView)
 
-  if (document.querySelector(".header-right")) {
-    document.querySelector(".header-right").insertBefore(viewToggleButton, themeToggle)
+    if (document.querySelector(".header-right")) {
+      document.querySelector(".header-right").insertBefore(viewToggleButton, themeToggle)
+    }
   }
 
   // Close panels when clicking outside
   document.addEventListener("click", (e) => {
-    // Close mobile menu when clicking outside
-    if (
-      mobileMenu &&
-      !menuButton.contains(e.target) &&
-      !mobileMenu.contains(e.target) &&
-      mobileMenu.classList.contains("open")
-    ) {
-      mobileMenu.classList.remove("open")
-    }
-
     // Close filters panel when clicking outside
     if (
       filtersPanel &&
@@ -88,6 +91,18 @@ document.addEventListener("DOMContentLoaded", () => {
       filtersPanel.classList.contains("open")
     ) {
       toggleFiltersPanel()
+    }
+
+    // Close search on mobile when clicking outside
+    if (
+      searchContainer &&
+      searchToggle &&
+      !searchToggle.contains(e.target) &&
+      !searchContainer.contains(e.target) &&
+      searchContainer.classList.contains("active")
+    ) {
+      searchContainer.classList.remove("active")
+      searchToggle.classList.remove("active")
     }
   })
 
@@ -101,17 +116,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Initialize
   fetchChannels()
+  addSwipeSupport()
+  setupPullToRefresh()
 
   // Functions
-  function toggleMobileMenu() {
-    mobileMenu.classList.toggle("open")
-
-    // Close filters panel if open
-    if (filtersPanel && filtersPanel.classList.contains("open")) {
-      toggleFiltersPanel()
-    }
-  }
-
   function toggleDarkMode() {
     const isDark = document.body.classList.toggle("dark")
 
@@ -130,11 +138,6 @@ document.addEventListener("DOMContentLoaded", () => {
     isFiltersPanelOpen = !isFiltersPanelOpen
     filtersPanel.classList.toggle("open", isFiltersPanelOpen)
     filterButton.classList.toggle("active", isFiltersPanelOpen)
-
-    // Close mobile menu if open
-    if (mobileMenu.classList.contains("open")) {
-      mobileMenu.classList.remove("open")
-    }
   }
 
   function handleSearch(e) {
@@ -177,18 +180,24 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function toggleView() {
-    isGridView = !isGridView
+    // Only allow toggle view on desktop
+    if (window.innerWidth >= 768) {
+      isGridView = !isGridView
 
-    // Update button icon
-    viewToggleButton.innerHTML = isGridView ? '<i class="fas fa-th-list"></i>' : '<i class="fas fa-th"></i>'
+      // Update button icon
+      const viewToggleButton = document.querySelector(".filter-button[aria-label='Cambiar vista']")
+      if (viewToggleButton) {
+        viewToggleButton.innerHTML = isGridView ? '<i class="fas fa-th-list"></i>' : '<i class="fas fa-th"></i>'
+      }
 
-    // Update grid class
-    if (channelsGrid) {
-      channelsGrid.className = isGridView ? "channels-grid" : "channels-list"
+      // Update grid class
+      if (channelsGrid) {
+        channelsGrid.className = isGridView ? "channels-grid" : "channels-list"
+      }
+
+      // Re-render channels to apply new view
+      renderChannels()
     }
-
-    // Re-render channels to apply new view
-    renderChannels()
   }
 
   async function fetchChannels() {
@@ -204,20 +213,24 @@ document.addEventListener("DOMContentLoaded", () => {
       loadFavoritesFromLocalStorage()
 
       // Add a small delay to make the loading animation visible
-      setTimeout(() => {
-        // Extract unique categories
-        const uniqueCategories = [...new Set(channels.map((channel) => channel.category))]
-        categories = ["Todos", ...uniqueCategories]
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          // Extract unique categories
+          const uniqueCategories = [...new Set(channels.map((channel) => channel.category))]
+          categories = ["Todos", ...uniqueCategories]
 
-        // Render categories
-        renderCategories()
+          // Render categories
+          renderCategories()
 
-        // Apply any initial filters from URL
-        filterChannels()
+          // Apply any initial filters from URL
+          filterChannels()
 
-        // Hide loading spinner
-        loadingSpinner.style.display = "none"
-      }, 500)
+          // Hide loading spinner
+          loadingSpinner.style.display = "none"
+
+          resolve()
+        }, 500)
+      })
     } catch (error) {
       console.error("Error fetching channels:", error)
       loadingSpinner.style.display = "none"
@@ -226,6 +239,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <p>Error al cargar los canales. Por favor, intenta nuevamente.</p>
         <button class="primary-button" onclick="location.reload()">Reintentar</button>
       `
+      return Promise.resolve()
     }
   }
 
@@ -287,9 +301,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
       noResults.style.display = "none"
 
+      // Set appropriate class based on device width
+      channelsGrid.className = window.innerWidth >= 768 && isGridView ? "channels-grid" : "channels-list"
+
       // Add channels with staggered animation
       filteredChannels.forEach((channel, index) => {
-        const channelCard = isGridView ? createChannelCard(channel) : createChannelListItem(channel)
+        const channelCard =
+          window.innerWidth >= 768 && isGridView ? createChannelCard(channel) : createChannelListItem(channel)
 
         // Add staggered animation delay
         channelCard.style.animationDelay = `${index * 0.05}s`
@@ -310,25 +328,25 @@ document.addEventListener("DOMContentLoaded", () => {
     const isFavorite = channel.favorite || false
 
     card.innerHTML = `
-      <div class="channel-thumbnail">
-        <img src="${channel.logo || "placeholder.svg"}" alt="${channel.name}" class="channel-logo" loading="lazy">
-        <div class="channel-overlay">
-          <div class="play-button">
-            <i class="fas fa-play"></i>
-          </div>
-        </div>
-        <button class="favorite-button ${isFavorite ? "active" : ""}" data-id="${channel.id}" aria-label="${isFavorite ? "Quitar de favoritos" : "Añadir a favoritos"}">
-          <i class="${isFavorite ? "fas" : "far"} fa-heart"></i>
-        </button>
-      </div>
-      <div class="channel-info">
-        <h3 class="channel-name">${channel.name}</h3>
-        <div class="channel-meta">
-          <span class="channel-category">${channel.category}</span>
-          <span class="channel-status">En vivo</span>
+    <div class="channel-thumbnail">
+      <img src="${channel.logo || "placeholder.svg"}" alt="${channel.name}" class="channel-logo" loading="lazy">
+      <div class="channel-overlay">
+        <div class="play-button">
+          <i class="fas fa-play"></i>
         </div>
       </div>
-    `
+      <button class="favorite-button ${isFavorite ? "active" : ""}" data-id="${channel.id}" aria-label="${isFavorite ? "Quitar de favoritos" : "Añadir a favoritos"}">
+        <i class="${isFavorite ? "fas" : "far"} fa-heart"></i>
+      </button>
+    </div>
+    <div class="channel-info">
+      <h3 class="channel-name">${channel.name}</h3>
+      <div class="channel-meta">
+        <span class="channel-category">${channel.category}</span>
+        <span class="channel-status">En vivo</span>
+      </div>
+    </div>
+  `
 
     // Add event listener to favorite button
     const favoriteButton = card.querySelector(".favorite-button")
@@ -349,25 +367,25 @@ document.addEventListener("DOMContentLoaded", () => {
     const isFavorite = channel.favorite || false
 
     listItem.innerHTML = `
-      <div class="list-item-logo">
-        <img src="${channel.logo || "placeholder.svg"}" alt="${channel.name}" class="channel-logo-small" loading="lazy">
+    <div class="list-item-logo">
+      <img src="${channel.logo || "placeholder.svg"}" alt="${channel.name}" class="channel-logo-small" loading="lazy">
+    </div>
+    <div class="list-item-info">
+      <h3 class="channel-name">${channel.name}</h3>
+      <div class="channel-meta">
+        <span class="channel-category">${channel.category}</span>
+        <span class="channel-status">En vivo</span>
       </div>
-      <div class="list-item-info">
-        <h3 class="channel-name">${channel.name}</h3>
-        <div class="channel-meta">
-          <span class="channel-category">${channel.category}</span>
-          <span class="channel-status">En vivo</span>
-        </div>
-      </div>
-      <div class="list-item-actions">
-        <button class="favorite-button ${isFavorite ? "active" : ""}" data-id="${channel.id}" aria-label="${isFavorite ? "Quitar de favoritos" : "Añadir a favoritos"}">
-          <i class="${isFavorite ? "fas" : "far"} fa-heart"></i>
-        </button>
-        <button class="play-button-small">
-          <i class="fas fa-play"></i>
-        </button>
-      </div>
-    `
+    </div>
+    <div class="list-item-actions">
+      <button class="favorite-button ${isFavorite ? "active" : ""}" data-id="${channel.id}" aria-label="${isFavorite ? "Quitar de favoritos" : "Añadir a favoritos"}">
+        <i class="${isFavorite ? "fas" : "far"} fa-heart"></i>
+      </button>
+      <button class="play-button-small">
+        <i class="fas fa-play"></i>
+      </button>
+    </div>
+  `
 
     // Add event listener to favorite button
     const favoriteButton = listItem.querySelector(".favorite-button")
@@ -492,6 +510,185 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  function addScrollIndicator() {
+    // Only add for mobile view
+    if (window.innerWidth >= 768 || !isGridView) return
+
+    // Remove existing indicator if any
+    if (scrollIndicator) {
+      scrollIndicator.innerHTML = ""
+
+      // Calculate number of pages (approx)
+      const channelsPerView = window.innerWidth < 480 ? 1 : 2
+      const totalPages = Math.ceil(filteredChannels.length / channelsPerView)
+
+      // Create dots
+      for (let i = 0; i < totalPages; i++) {
+        const dot = document.createElement("div")
+        dot.className = "scroll-dot"
+        if (i === 0) dot.classList.add("active")
+        scrollIndicator.appendChild(dot)
+      }
+
+      // Add scroll event listener to update active dot
+      channelsGrid.addEventListener("scroll", updateScrollIndicator)
+    }
+  }
+
+  function updateScrollIndicator() {
+    if (window.innerWidth >= 768 || !isGridView || !scrollIndicator) return
+
+    const dots = scrollIndicator.querySelectorAll(".scroll-dot")
+    if (!dots.length) return
+
+    // Calculate which dot should be active
+    const scrollPosition = channelsGrid.scrollLeft
+    const maxScroll = channelsGrid.scrollWidth - channelsGrid.clientWidth
+    const scrollRatio = scrollPosition / maxScroll
+    const activeDotIndex = Math.min(Math.floor(scrollRatio * dots.length), dots.length - 1)
+
+    // Update active dot
+    dots.forEach((dot, index) => {
+      if (index === activeDotIndex) {
+        dot.classList.add("active")
+      } else {
+        dot.classList.remove("active")
+      }
+    })
+  }
+
+  // Add touch swipe support for mobile
+  function addSwipeSupport() {
+    if (!channelsGrid) return
+
+    let startX, startY
+    let distX, distY
+    const threshold = 100 // Minimum distance for swipe
+
+    channelsGrid.addEventListener(
+      "touchstart",
+      (e) => {
+        startX = e.touches[0].clientX
+        startY = e.touches[0].clientY
+      },
+      false,
+    )
+
+    channelsGrid.addEventListener(
+      "touchmove",
+      (e) => {
+        if (!startX || !startY) return
+
+        distX = e.touches[0].clientX - startX
+        distY = e.touches[0].clientY - startY
+
+        // If horizontal swipe is more significant than vertical
+        if (Math.abs(distX) > Math.abs(distY)) {
+          e.preventDefault() // Prevent page scroll
+        }
+      },
+      { passive: false },
+    )
+
+    channelsGrid.addEventListener(
+      "touchend",
+      (e) => {
+        if (!startX || !startY) return
+
+        distX = e.changedTouches[0].clientX - startX
+        distY = e.changedTouches[0].clientY - startY
+
+        // If horizontal swipe is more significant than vertical and exceeds threshold
+        if (Math.abs(distX) > Math.abs(distY) && Math.abs(distX) > threshold) {
+          // Swipe left
+          if (distX < 0) {
+            channelsGrid.scrollBy({ left: channelsGrid.clientWidth * 0.8, behavior: "smooth" })
+          }
+          // Swipe right
+          else {
+            channelsGrid.scrollBy({ left: -channelsGrid.clientWidth * 0.8, behavior: "smooth" })
+          }
+        }
+
+        startX = null
+        startY = null
+      },
+      false,
+    )
+  }
+
+  // Add pull-to-refresh functionality
+  function setupPullToRefresh() {
+    if (!channelsGrid) return
+
+    // Create pull-to-refresh element
+    const pullToRefresh = document.createElement("div")
+    pullToRefresh.className = "pull-to-refresh"
+    pullToRefresh.innerHTML = '<div class="refresh-spinner"></div>'
+
+    // Insert before channels grid
+    document.querySelector(".main-content").insertBefore(pullToRefresh, channelsGrid)
+
+    let touchStartY = 0
+    let touchEndY = 0
+    let isRefreshing = false
+
+    document.addEventListener(
+      "touchstart",
+      (e) => {
+        touchStartY = e.touches[0].clientY
+      },
+      { passive: true },
+    )
+
+    document.addEventListener(
+      "touchmove",
+      (e) => {
+        if (isRefreshing) return
+
+        touchEndY = e.touches[0].clientY
+        const distance = touchEndY - touchStartY
+
+        // Only activate if we're at the top of the page and pulling down
+        if (window.scrollY === 0 && distance > 0 && distance < 100) {
+          pullToRefresh.classList.add("visible")
+          pullToRefresh.style.transform = `translateY(${Math.min(distance, 60)}px)`
+        }
+      },
+      { passive: true },
+    )
+
+    document.addEventListener(
+      "touchend",
+      () => {
+        if (isRefreshing) return
+
+        const distance = touchEndY - touchStartY
+
+        if (window.scrollY === 0 && distance > 50) {
+          // Trigger refresh
+          isRefreshing = true
+          pullToRefresh.classList.add("refreshing")
+
+          // Refresh data
+          fetchChannels().then(() => {
+            // Reset after refresh
+            setTimeout(() => {
+              pullToRefresh.classList.remove("visible", "refreshing")
+              pullToRefresh.style.transform = ""
+              isRefreshing = false
+            }, 1000)
+          })
+        } else {
+          // Reset without refreshing
+          pullToRefresh.classList.remove("visible")
+          pullToRefresh.style.transform = ""
+        }
+      },
+      { passive: true },
+    )
+  }
+
   // Notification system
   function showNotification(message, type = "info") {
     // Remove any existing notification
@@ -530,98 +727,37 @@ document.addEventListener("DOMContentLoaded", () => {
       filterButton.classList.remove("active")
       isFiltersPanelOpen = false
     }
-  })
 
-  // Add list view styles
-  const style = document.createElement("style")
-  style.textContent = `
-    .channels-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
+    // Close search on mobile
+    if (window.innerWidth >= 768 && searchContainer && searchContainer.classList.contains("active")) {
+      searchContainer.classList.remove("active")
+      if (searchToggle) searchToggle.classList.remove("active")
     }
-    
-    .channel-list-item {
-      display: flex;
-      align-items: center;
-      padding: 0.75rem;
-      background-color: var(--card);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow-md);
-      transition: transform 0.3s, box-shadow 0.3s;
-      cursor: pointer;
+
+    // Update view mode based on screen size
+    isGridView = window.innerWidth >= 768 && isGridView
+
+    // Re-render channels if needed
+    if (filteredChannels.length > 0) {
+      renderChannels()
     }
-    
-    .channel-list-item:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-lg);
-    }
-    
-    .list-item-logo {
-      flex: 0 0 4rem;
-      height: 4rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: var(--muted);
-      border-radius: var(--radius);
-      overflow: hidden;
-      margin-right: 1rem;
-    }
-    
-    .channel-logo-small {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-    }
-    
-    .list-item-info {
-      flex: 1;
-      min-width: 0;
-    }
-    
-    .list-item-actions {
-      display: flex;
-      gap: 0.5rem;
-    }
-    
-    .play-button-small {
-      width: 2.5rem;
-      height: 2.5rem;
-      border-radius: 50%;
-      background-color: var(--primary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      border: none;
-      cursor: pointer;
-      transition: transform 0.3s, background-color 0.3s;
-      box-shadow: var(--shadow-sm);
-    }
-    
-    .play-button-small:hover {
-      transform: scale(1.1);
-      background-color: var(--primary-hover);
-    }
-    
-    @media (max-width: 480px) {
-      .list-item-logo {
-        flex: 0 0 3rem;
-        height: 3rem;
-        margin-right: 0.75rem;
+
+    // Add or remove view toggle button based on screen size
+    const existingToggleButton = document.querySelector(".filter-button[aria-label='Cambiar vista']")
+
+    if (window.innerWidth >= 768 && !existingToggleButton) {
+      const viewToggleButton = document.createElement("button")
+      viewToggleButton.className = "filter-button"
+      viewToggleButton.setAttribute("aria-label", "Cambiar vista")
+      viewToggleButton.innerHTML = '<i class="fas fa-th-list"></i>'
+      viewToggleButton.addEventListener("click", toggleView)
+
+      if (document.querySelector(".header-right")) {
+        document.querySelector(".header-right").insertBefore(viewToggleButton, themeToggle)
       }
-      
-      .channel-list-item {
-        padding: 0.5rem;
-      }
-      
-      .play-button-small {
-        width: 2rem;
-        height: 2rem;
-      }
+    } else if (window.innerWidth < 768 && existingToggleButton) {
+      existingToggleButton.remove()
     }
-  `
-  document.head.appendChild(style)
+  })
 })
 
