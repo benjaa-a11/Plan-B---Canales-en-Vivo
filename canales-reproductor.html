@@ -15,12 +15,8 @@
     <header class="header">
       <div class="container header-container">
         <div class="header-left">
-          <button class="menu-button" id="menuButton" aria-label="Menu">
-            <i class="fas fa-bars"></i>
-          </button>
-          <a href="index.html" class="logo">
-            <i class="fas fa-tv"></i>
-            Plan B
+          <a href="canales-en-vivo.html" class="logo">
+            <img src="assets/logo.png" alt="Plan B" class="logo-img">
           </a>
         </div>
         <div class="header-right">
@@ -31,15 +27,6 @@
         </div>
       </div>
     </header>
-
-    <div class="mobile-menu" id="mobileMenu">
-      <nav class="mobile-nav">
-        <a href="index.html" class="nav-link">Inicio</a>
-        <a href="#" class="nav-link">Categorías</a>
-        <a href="#" class="nav-link">Favoritos</a>
-        <a href="#" class="nav-link">Programación</a>
-      </nav>
-    </div>
 
     <main class="container main-content">
       <div class="loading-spinner" id="loadingSpinner">
@@ -70,29 +57,7 @@
                   <!-- Iframe for external players -->
                   <iframe id="videoIframe" width="100%" style="aspect-ratio:16/9;margin-bottom:20px" name="iframe" title="Live Video" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen src="" scrolling="no"></iframe>
 
-                  <!-- Player controls overlay -->
-                  <div class="player-controls-overlay" id="playerControlsOverlay">
-                    <div class="player-controls">
-                      <button class="control-button" id="pipButton" aria-label="Picture in Picture">
-                        <i class="fas fa-external-link-alt"></i>
-                      </button>
-                      <button class="control-button" id="fullscreenButton" aria-label="Pantalla completa">
-                        <i class="fas fa-expand"></i>
-                      </button>
-                    </div>
-                  </div>
                 </div>
-              </div>
-            </div>
-            
-            <div class="player-instructions">
-              <div class="instruction-item">
-                <i class="fas fa-keyboard"></i>
-                <span>Usa las teclas <kbd>1-9</kbd> para cambiar entre opciones, <kbd>F</kbd> para pantalla completa, <kbd>ESC</kbd> para volver</span>
-              </div>
-              <div class="instruction-item">
-                <i class="fas fa-mobile-alt"></i>
-                <span>Desliza a la izquierda o derecha para cambiar entre opciones</span>
               </div>
             </div>
             
