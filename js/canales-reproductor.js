@@ -20,8 +20,27 @@ document.addEventListener("DOMContentLoaded", () => {
   const historyList = document.getElementById("historyList")
   const pipButton = document.getElementById("pipButton")
   const fullscreenButton = document.getElementById("fullscreenButton")
+  const mobilePipButton = document.getElementById("mobilePipButton")
+  const mobileFullscreenButton = document.getElementById("mobileFullscreenButton")
+  const prevStreamButton = document.getElementById("prevStreamButton")
+  const nextStreamButton = document.getElementById("nextStreamButton")
   const relatedChannelsContainer = document.getElementById("relatedChannelsContainer")
   const playerControlsOverlay = document.getElementById("playerControlsOverlay")
+  const mobilePlayerControls = document.getElementById("mobilePlayerControls")
+  const streamQualityIndicator = document.getElementById("streamQualityIndicator")
+  const playerInstructions = document.getElementById("playerInstructions")
+  const shareButton = document.getElementById("shareButton")
+  const shareModal = document.getElementById("shareModal")
+  const closeShareModal = document.getElementById("closeShareModal")
+  const shareUrlInput = document.getElementById("shareUrlInput")
+  const copyShareUrl = document.getElementById("copyShareUrl")
+  const shareWhatsapp = document.getElementById("shareWhatsapp")
+  const shareTelegram = document.getElementById("shareTelegram")
+  const shareFacebook = document.getElementById("shareFacebook")
+  const shareTwitter = document.getElementById("shareTwitter")
+  const scrollToTop = document.getElementById("scrollToTop")
+  const offlineNotification = document.getElementById("offlineNotification")
+  const connectionStatus = document.getElementById("connectionStatus")
 
   // State
   let channel = null
@@ -31,6 +50,19 @@ document.addEventListener("DOMContentLoaded", () => {
   let isFullscreen = false
   let streamErrorCount = 0
   let autoSwitchTimer = null
+  // Estado de conexión
+  let isOffline = false
+  let connectionCheckInterval = null
+  let channelsCache = null
+  let lastFetchTime = 0
+  let controlsTimeout = null
+  let touchStartX = 0
+  let touchStartY = 0
+  let lastTapTime = 0
+  let isVideoPlaying = false
+  let videoLoadingTimeout = null
+  let streamQuality = "SD"
+  let shareUrl = ""
 
   // Check for dark mode preference
   const prefersDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
@@ -54,9 +86,77 @@ document.addEventListener("DOMContentLoaded", () => {
     pipButton.addEventListener("click", togglePictureInPicture)
   }
 
+  if (mobilePipButton) {
+    mobilePipButton.addEventListener("click", togglePictureInPicture)
+  }
+
   if (fullscreenButton) {
     fullscreenButton.addEventListener("click", toggleFullscreen)
   }
+
+  if (mobileFullscreenButton) {
+    mobileFullscreenButton.addEventListener("click", toggleFullscreen)
+  }
+
+  if (prevStreamButton) {
+    prevStreamButton.addEventListener("click", loadPreviousStream)
+  }
+
+  if (nextStreamButton) {
+    nextStreamButton.addEventListener("click", loadNextStream)
+  }
+
+  if (shareButton) {
+    shareButton.addEventListener("click", openShareModal)
+  }
+
+  if (closeShareModal) {
+    closeShareModal.addEventListener("click", closeShareModalFunc)
+  }
+
+  if (copyShareUrl) {
+    copyShareUrl.addEventListener("click", copyShareUrlToClipboard)
+  }
+
+  if (shareWhatsapp) {
+    shareWhatsapp.addEventListener("click", () => shareVia("whatsapp"))
+  }
+
+  if (shareTelegram) {
+    shareTelegram.addEventListener("click", () => shareVia("telegram"))
+  }
+
+  if (shareFacebook) {
+    shareFacebook.addEventListener("click", () => shareVia("facebook"))
+  }
+
+  if (shareTwitter) {
+    shareTwitter.addEventListener("click", () => shareVia("twitter"))
+  }
+
+  if (scrollToTop) {
+    scrollToTop.addEventListener("click", () => {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      })
+    })
+  }
+
+  // Close share modal when clicking outside
+  window.addEventListener("click", (e) => {
+    if (
+      shareModal &&
+      shareModal.style.display === "flex" &&
+      !e.target.closest(".share-modal-content") &&
+      !e.target.closest(".share-button")
+    ) {
+      closeShareModalFunc()
+    }
+  })
+
+  // Setup keyboard shortcuts
+  document.addEventListener("keydown", handleKeyboardShortcuts)
 
   // Initialize
   const urlParams = new URLSearchParams(window.location.search)
@@ -64,9 +164,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (channelId) {
     fetchChannel(channelId)
+
+    // Set share URL
+    shareUrl = window.location.href
+    if (shareUrlInput) {
+      shareUrlInput.value = shareUrl
+    }
   } else {
     showChannelNotFound()
   }
+
+  // Setup network status listeners
+  setupNetworkStatusListeners()
+  setupScrollListener()
 
   // Functions
   function toggleDarkMode() {
@@ -84,7 +194,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function goBack() {
-    window.location.href = "canales-en-vivo.html"
+    window.location.href = "index.html"
   }
 
   async function fetchChannel(id) {
@@ -92,30 +202,87 @@ document.addEventListener("DOMContentLoaded", () => {
       // Show loading spinner
       loadingSpinner.style.display = "flex"
 
-      // Fetch channels data
-      const response = await fetch("data/canales-en-vivo.json")
-      channels = await response.json()
+      // Check if we have cached data and it's less than 5 minutes old
+      const now = Date.now()
+      if (channelsCache && now - lastFetchTime < 300000 && !isOffline) {
+        channels = channelsCache
+        processChannel(id)
+        return
+      }
 
-      // Load favorites from localStorage
-      loadFavoritesFromLocalStorage()
+      // Try to get from cache if offline
+      if (isOffline) {
+        const cachedData = localStorage.getItem("channelsCache")
+        if (cachedData) {
+          channels = JSON.parse(cachedData)
+          processChannel(id)
+          showNotification("Usando datos almacenados en caché", "warning")
+          return
+        }
+      }
 
-      // Find the requested channel
-      channel = channels.find((ch) => ch.id === id)
+      // Fetch channels data with timeout
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 10000)
 
-      if (channel) {
-        // Add to view history
-        addToViewHistory(channel.id)
+      try {
+        const response = await fetch("data/canales-en-vivo.json", {
+          signal: controller.signal,
+          cache: "no-cache",
+        })
 
-        renderChannel()
-        renderViewHistory()
-      } else {
-        showChannelNotFound()
+        clearTimeout(timeoutId)
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+
+        channels = await response.json()
+
+        // Cache the data
+        channelsCache = [...channels]
+        lastFetchTime = now
+
+        // Save to localStorage for offline use
+        localStorage.setItem("channelsCache", JSON.stringify(channels))
+        localStorage.setItem("lastFetchTime", now.toString())
+
+        processChannel(id)
+      } catch (fetchError) {
+        // If fetch fails, try to load from localStorage
+        const cachedData = localStorage.getItem("channelsCache")
+        if (cachedData) {
+          channels = JSON.parse(cachedData)
+          processChannel(id)
+          showNotification("Error al actualizar datos. Usando caché.", "warning")
+        } else {
+          throw fetchError
+        }
       }
     } catch (error) {
       console.error("Error fetching channel:", error)
       showChannelNotFound()
-    } finally {
+    }
+  }
+
+  function processChannel(id) {
+    // Load favorites from localStorage
+    loadFavoritesFromLocalStorage()
+
+    // Find the requested channel
+    channel = channels.find((ch) => ch.id === id)
+
+    if (channel) {
+      // Add to view history
+      addToViewHistory(channel.id)
+
+      renderChannel()
+      renderViewHistory()
+
+      // Hide loading spinner
       loadingSpinner.style.display = "none"
+    } else {
+      showChannelNotFound()
     }
   }
 
@@ -145,16 +312,51 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Set channel info card
     channelInfoCard.innerHTML = `
-      <h1>${channel.name}</h1>
-      <div class="channel-tags">
-        <span class="channel-category">${channel.category}</span>
-        <span class="channel-status">En vivo</span>
-      </div>
-      <p class="channel-description">${channel.description || "Disfruta de la transmisión en vivo de este canal."}</p>
-    `
+    <h1>${channel.name}</h1>
+    <div class="channel-tags">
+      <span class="channel-category">${channel.category}</span>
+      <span class="channel-status">
+        <i class="fas fa-circle"></i>
+        En vivo
+      </span>
+    </div>
+    <p class="channel-description">${channel.description || "Disfruta de la transmisión en vivo de este canal."}</p>
+    <div class="channel-meta-info">
+  `
 
     // Show player content
     playerContent.style.display = "block"
+
+    // Add keyboard shortcuts info
+    if (playerInstructions) {
+      playerInstructions.style.display = "block"
+
+      // Hide instructions after 10 seconds
+      setTimeout(() => {
+        playerInstructions.classList.add("fade-out")
+        setTimeout(() => {
+          playerInstructions.style.display = "none"
+          playerInstructions.classList.remove("fade-out")
+        }, 500)
+      }, 10000)
+    }
+  }
+
+  function formatLastUpdated(dateString) {
+    if (!dateString) return "Desconocido"
+
+    try {
+      const date = new Date(dateString)
+      return date.toLocaleDateString("es-ES", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    } catch (e) {
+      return "Desconocido"
+    }
   }
 
   function renderStreamOptions() {
@@ -179,12 +381,30 @@ document.addEventListener("DOMContentLoaded", () => {
         "aria-label",
         `${option.name} ${option.isWorking ? "(Funcionando)" : "(Puede tener problemas)"}`,
       )
+
+      // Add response time indicator if available
+      if (option.responseTime) {
+        const responseQuality = getResponseQuality(option.responseTime)
+        const responseIcon = document.createElement("span")
+        responseIcon.className = `response-indicator ${responseQuality}`
+        responseIcon.innerHTML = `<i class="fas fa-circle"></i>`
+        responseIcon.title = `Tiempo de respuesta: ${Math.round(option.responseTime)}ms`
+        button.appendChild(responseIcon)
+      }
+
       button.addEventListener("click", () => loadStream(index))
       mainOptionsContainer.appendChild(button)
     })
 
     mainOptionsSection.appendChild(mainOptionsContainer)
     streamOptions.appendChild(mainOptionsSection)
+  }
+
+  function getResponseQuality(responseTime) {
+    if (responseTime < 700) return "excellent"
+    if (responseTime < 1000) return "good"
+    if (responseTime < 1500) return "average"
+    return "poor"
   }
 
   function renderRelatedChannels() {
@@ -252,7 +472,65 @@ document.addEventListener("DOMContentLoaded", () => {
     // Show channel switching animation
     showChannelSwitchAnimation()
 
+    // Set stream quality based on name (if it contains HD)
+    streamQuality = streamOption.name.toLowerCase().includes("hd") ? "HD" : "SD"
+    updateStreamQualityIndicator()
+
     loadExternalStream(streamOption.url)
+
+    // Update mobile controls state
+    updateMobileControlsState()
+  }
+
+  function loadPreviousStream() {
+    if (!channel.streamOptions || channel.streamOptions.length <= 1) return
+
+    const prevIndex = (currentStreamIndex - 1 + channel.streamOptions.length) % channel.streamOptions.length
+    loadStream(prevIndex)
+    showNotification("Opción anterior", "info")
+  }
+
+  function loadNextStream() {
+    if (!channel.streamOptions || channel.streamOptions.length <= 1) return
+
+    const nextIndex = (currentStreamIndex + 1) % channel.streamOptions.length
+    loadStream(nextIndex)
+    showNotification("Siguiente opción", "info")
+  }
+
+  function updateMobileControlsState() {
+    if (!prevStreamButton || !nextStreamButton) return
+
+    // Disable buttons if only one stream option
+    if (channel.streamOptions.length <= 1) {
+      prevStreamButton.disabled = true
+      nextStreamButton.disabled = true
+      prevStreamButton.classList.add("disabled")
+      nextStreamButton.classList.add("disabled")
+    } else {
+      prevStreamButton.disabled = false
+      nextStreamButton.disabled = false
+      prevStreamButton.classList.remove("disabled")
+      nextStreamButton.classList.remove("disabled")
+    }
+  }
+
+  function updateStreamQualityIndicator() {
+    // Update quality badge
+    if (streamQualityIndicator) {
+      const qualityBadge = streamQualityIndicator.querySelector(".quality-badge")
+      if (qualityBadge) {
+        qualityBadge.textContent = streamQuality
+        qualityBadge.className = `quality-badge ${streamQuality.toLowerCase()}`
+      }
+    }
+
+    // Update quality in channel info
+    const qualityIndicator = document.getElementById("qualityIndicator")
+    if (qualityIndicator) {
+      qualityIndicator.textContent = streamQuality
+      qualityIndicator.className = streamQuality.toLowerCase()
+    }
   }
 
   function showChannelSwitchAnimation() {
@@ -275,6 +553,18 @@ document.addEventListener("DOMContentLoaded", () => {
       animationElement.appendChild(logoImg)
     }
 
+    // Add channel name
+    const channelName = document.createElement("h3")
+    channelName.textContent = channel.name
+    animationElement.appendChild(channelName)
+
+    // Add stream option name
+    if (channel.streamOptions && channel.streamOptions[currentStreamIndex]) {
+      const optionName = document.createElement("p")
+      optionName.textContent = channel.streamOptions[currentStreamIndex].name
+      animationElement.appendChild(optionName)
+    }
+
     // Add to video container
     videoContainer.appendChild(animationElement)
 
@@ -294,12 +584,18 @@ document.addEventListener("DOMContentLoaded", () => {
     // Show loading indicator
     showIframeLoading()
 
+    // Clear any existing timeout
+    if (videoLoadingTimeout) {
+      clearTimeout(videoLoadingTimeout)
+    }
+
     // Set iframe source
     videoIframe.src = url
 
     // Handle iframe load event
     videoIframe.onload = () => {
       hideIframeLoading()
+      isVideoPlaying = true
     }
 
     // Handle iframe error
@@ -308,7 +604,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Set a timeout to detect if stream doesn't load properly
-    setTimeout(() => {
+    videoLoadingTimeout = setTimeout(() => {
       if (document.getElementById("iframeLoading")) {
         handleStreamError()
       }
@@ -318,6 +614,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function handleStreamError() {
     streamErrorCount++
     hideIframeLoading()
+    isVideoPlaying = false
 
     // Show error message
     errorMessage.style.display = "block"
@@ -343,7 +640,11 @@ document.addEventListener("DOMContentLoaded", () => {
         autoSwitchTimer = setTimeout(() => {
           loadStream(nextWorkingIndex)
         }, 5000)
+      } else {
+        showNotification("No se encontraron opciones alternativas que funcionen", "error")
       }
+    } else if (streamErrorCount > 1) {
+      showNotification("Esta transmisión no está funcionando correctamente", "error")
     }
   }
 
@@ -353,7 +654,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const loadingDiv = document.createElement("div")
       loadingDiv.className = "iframe-loading"
       loadingDiv.id = "iframeLoading"
-      loadingDiv.innerHTML = '<div class="spinner"></div>'
+      loadingDiv.innerHTML = `
+      <div class="spinner"></div>
+      <p>Cargando transmisión...</p>
+    `
       videoContainer.appendChild(loadingDiv)
     }
   }
@@ -417,7 +721,12 @@ document.addEventListener("DOMContentLoaded", () => {
       favorite: channel.favorite || false,
     }))
 
-    localStorage.setItem("channelFavorites", JSON.stringify(favoritesData))
+    try {
+      localStorage.setItem("channelFavorites", JSON.stringify(favoritesData))
+    } catch (e) {
+      console.error("Error saving to localStorage:", e)
+      showNotification("Error al guardar favoritos", "error")
+    }
   }
 
   function loadFavoritesFromLocalStorage() {
@@ -450,6 +759,7 @@ document.addEventListener("DOMContentLoaded", () => {
       id: channelToAdd.id,
       name: channelToAdd.name,
       logo: channelToAdd.logo,
+      category: channelToAdd.category,
       timestamp: new Date().toISOString(),
     }
 
@@ -465,7 +775,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Save to localStorage
-    localStorage.setItem("channelViewHistory", JSON.stringify(viewHistory))
+    saveViewHistory()
+  }
+
+  function saveViewHistory() {
+    try {
+      localStorage.setItem("channelViewHistory", JSON.stringify(viewHistory))
+    } catch (e) {
+      console.error("Error saving view history to localStorage:", e)
+    }
   }
 
   function loadViewHistory() {
@@ -512,8 +830,12 @@ document.addEventListener("DOMContentLoaded", () => {
       const timeAgo = getTimeAgo(new Date(item.timestamp))
 
       historyItem.innerHTML = `
-        <img src="${item.logo || "placeholder.svg"}" alt="${item.name}" class="history-item-logo" loading="lazy">
-      `
+      <img src="${item.logo || "placeholder.svg"}" alt="${item.name}" class="history-item-logo" loading="lazy">
+      <div class="history-item-info">
+        <span class="history-item-name">${item.name}</span>
+        <span class="history-item-time">${timeAgo}</span>
+      </div>
+    `
 
       historyList.appendChild(historyItem)
     })
@@ -581,7 +903,7 @@ document.addEventListener("DOMContentLoaded", () => {
         container.webkitRequestFullscreen()
       }
       isFullscreen = true
-      fullscreenButton.innerHTML = '<i class="fas fa-compress"></i>'
+      updateFullscreenButton(true)
       showNotification("Pantalla completa activada", "info")
     } else {
       // Exit fullscreen
@@ -595,28 +917,293 @@ document.addEventListener("DOMContentLoaded", () => {
         document.webkitExitFullscreen()
       }
       isFullscreen = false
-      fullscreenButton.innerHTML = '<i class="fas fa-expand"></i>'
+      updateFullscreenButton(false)
       showNotification("Saliendo de pantalla completa", "info")
     }
   }
 
   // Listen for fullscreen change
-  document.addEventListener("fullscreenchange", updateFullscreenButton)
-  document.addEventListener("webkitfullscreenchange", updateFullscreenButton)
-  document.addEventListener("mozfullscreenchange", updateFullscreenButton)
-  document.addEventListener("MSFullscreenChange", updateFullscreenButton)
+  document.addEventListener("fullscreenchange", () => updateFullscreenButton(!!document.fullscreenElement))
+  document.addEventListener("webkitfullscreenchange", () => updateFullscreenButton(!!document.webkitFullscreenElement))
+  document.addEventListener("mozfullscreenchange", () => updateFullscreenButton(!!document.mozFullScreenElement))
+  document.addEventListener("MSFullscreenChange", () => updateFullscreenButton(!!document.msFullscreenElement))
 
-  function updateFullscreenButton() {
-    if (
-      document.fullscreenElement ||
-      document.webkitFullscreenElement ||
-      document.mozFullscreenElement ||
-      document.msFullscreenElement
-    ) {
-      fullscreenButton.innerHTML = '<i class="fas fa-compress"></i>'
-    } else {
-      fullscreenButton.innerHTML = '<i class="fas fa-expand"></i>'
+  function updateFullscreenButton(isFullscreen) {
+    if (fullscreenButton) {
+      fullscreenButton.innerHTML = isFullscreen ? '<i class="fas fa-compress"></i>' : '<i class="fas fa-expand"></i>'
     }
+
+    if (mobileFullscreenButton) {
+      mobileFullscreenButton.innerHTML = isFullscreen
+        ? '<i class="fas fa-compress"></i>'
+        : '<i class="fas fa-expand"></i>'
+    }
+  }
+
+  // Handle keyboard shortcuts
+  function handleKeyboardShortcuts(e) {
+    // Only handle shortcuts if channel is loaded
+    if (!channel) return
+
+    switch (e.key.toLowerCase()) {
+      case "arrowleft":
+        // Previous stream option
+        loadPreviousStream()
+        break
+      case "arrowright":
+        // Next stream option
+        loadNextStream()
+        break
+      case "f":
+        // Toggle fullscreen
+        toggleFullscreen()
+        break
+      case "p":
+        // Toggle picture-in-picture
+        togglePictureInPicture()
+        break
+      case "m":
+        // Toggle mute (only works with video element)
+        if (videoElement && videoElement.style.display !== "none") {
+          videoElement.muted = !videoElement.muted
+          showNotification(videoElement.muted ? "Sonido silenciado" : "Sonido activado", "info")
+        }
+        break
+      case "escape":
+        // Close share modal if open
+        if (shareModal && shareModal.style.display === "flex") {
+          closeShareModalFunc()
+        }
+        break
+    }
+  }
+
+  // Share functionality
+  function openShareModal() {
+    if (!shareModal) return
+
+    shareModal.style.display = "flex"
+
+    // Set share URL
+    if (shareUrlInput) {
+      shareUrlInput.value = shareUrl
+      shareUrlInput.select()
+    }
+  }
+
+  function closeShareModalFunc() {
+    if (!shareModal) return
+
+    shareModal.style.display = "none"
+  }
+
+  function copyShareUrlToClipboard() {
+    if (!shareUrlInput) return
+
+    shareUrlInput.select()
+    document.execCommand("copy")
+
+    showNotification("Enlace copiado al portapapeles", "success")
+  }
+
+  function shareVia(platform) {
+    let shareLink = ""
+    const text = `Mira ${channel.name} en vivo en Plan B`
+
+    switch (platform) {
+      case "whatsapp":
+        shareLink = `https://wa.me/?text=${encodeURIComponent(text + " " + shareUrl)}`
+        break
+      case "telegram":
+        shareLink = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(text)}`
+        break
+      case "facebook":
+        shareLink = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`
+        break
+      case "twitter":
+        shareLink = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(shareUrl)}`
+        break
+    }
+
+    if (shareLink) {
+      window.open(shareLink, "_blank")
+    }
+
+    // Close modal after sharing
+    closeShareModalFunc()
+  }
+
+  // Función para verificar la conexión a internet de forma activa
+  function checkInternetConnection() {
+    return fetch("https://www.google.com/favicon.ico", {
+      mode: "no-cors",
+      cache: "no-store",
+      method: "HEAD",
+      timeout: 2000,
+    })
+      .then(() => {
+        if (isOffline) {
+          isOffline = false
+          offlineNotification.classList.remove("visible")
+          showNotification("Conexión restablecida", "success")
+
+          // Actualizar indicador de conexión
+          if (connectionStatus) {
+            connectionStatus.classList.remove("offline")
+            connectionStatus.title = "Conectado a internet"
+            connectionStatus.querySelector(".fa-wifi").style.display = "block"
+            connectionStatus.querySelector(".fa-wifi-slash").style.display = "none"
+          }
+        }
+        return true
+      })
+      .catch(() => {
+        if (!isOffline) {
+          isOffline = true
+          offlineNotification.classList.add("visible")
+          showNotification("Sin conexión a internet. La transmisión puede no funcionar correctamente.", "warning")
+
+          // Actualizar indicador de conexión
+          if (connectionStatus) {
+            connectionStatus.classList.add("offline")
+            connectionStatus.title = "Sin conexión a internet"
+            connectionStatus.querySelector(".fa-wifi").style.display = "none"
+            connectionStatus.querySelector(".fa-wifi-slash").style.display = "block"
+          }
+        }
+        return false
+      })
+  }
+
+  // Setup network status listeners
+  function setupNetworkStatusListeners() {
+    // Verificar estado inicial de conexión
+    checkInternetConnection()
+
+    // Configurar intervalo para verificar la conexión periódicamente
+    connectionCheckInterval = setInterval(checkInternetConnection, 30000)
+
+    // Listeners para eventos de conexión del navegador
+    window.addEventListener("online", () => {
+      // Verificar si realmente hay conexión (los eventos pueden ser poco confiables)
+      checkInternetConnection()
+    })
+
+    window.addEventListener("offline", () => {
+      isOffline = true
+      offlineNotification.classList.add("visible")
+      showNotification("Sin conexión a internet. La transmisión puede no funcionar correctamente.", "warning")
+    })
+
+    // Agregar botón para cerrar la notificación
+    const closeOfflineBtn = document.createElement("button")
+    closeOfflineBtn.className = "close-offline-notification"
+    closeOfflineBtn.innerHTML = '<i class="fas fa-times"></i>'
+    closeOfflineBtn.setAttribute("aria-label", "Cerrar notificación")
+    closeOfflineBtn.addEventListener("click", (e) => {
+      e.preventDefault()
+      offlineNotification.classList.remove("visible")
+    })
+
+    offlineNotification.appendChild(closeOfflineBtn)
+  }
+
+  // Setup scroll listener for scroll-to-top button
+  function setupScrollListener() {
+    if (!scrollToTop) return
+
+    window.addEventListener("scroll", () => {
+      // Show button when scrolled down 300px
+      if (window.scrollY > 300) {
+        scrollToTop.classList.add("visible")
+      } else {
+        scrollToTop.classList.remove("visible")
+      }
+    })
+  }
+
+  // Add swipe gestures for mobile
+  videoContainer.addEventListener(
+    "touchstart",
+    (e) => {
+      touchStartX = e.changedTouches[0].screenX
+      touchStartY = e.changedTouches[0].screenY
+
+      // Show controls
+      showControls()
+
+      // Detect double tap
+      const currentTime = new Date().getTime()
+      const tapLength = currentTime - lastTapTime
+
+      if (tapLength < 300 && tapLength > 0) {
+        // Double tap detected
+        toggleFullscreen()
+        e.preventDefault()
+      }
+
+      lastTapTime = currentTime
+    },
+    { passive: false },
+  )
+
+  videoContainer.addEventListener(
+    "touchend",
+    (e) => {
+      const touchEndX = e.changedTouches[0].screenX
+      const touchEndY = e.changedTouches[0].screenY
+      handleSwipe(touchEndX, touchEndY)
+    },
+    { passive: true },
+  )
+
+  function handleSwipe(touchEndX, touchEndY) {
+    if (!touchStartX || !touchStartY) return
+
+    const swipeThreshold = 100
+    const diffX = touchEndX - touchStartX
+    const diffY = touchEndY - touchStartY
+
+    // Only handle horizontal swipes if they're more significant than vertical movement
+    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > swipeThreshold) {
+      if (diffX < 0) {
+        // Swipe left - next stream
+        loadNextStream()
+      } else {
+        // Swipe right - previous stream
+        loadPreviousStream()
+      }
+    }
+
+    touchStartX = null
+    touchStartY = null
+  }
+
+  // Show controls on touch for mobile
+  function showControls() {
+    if (playerControlsOverlay) {
+      playerControlsOverlay.style.opacity = "1"
+    }
+
+    if (mobilePlayerControls) {
+      mobilePlayerControls.style.opacity = "1"
+    }
+
+    // Clear any existing timeout
+    if (controlsTimeout) {
+      clearTimeout(controlsTimeout)
+    }
+
+    // Hide controls after 3 seconds
+    controlsTimeout = setTimeout(() => {
+      if (playerControlsOverlay) {
+        playerControlsOverlay.style.opacity = ""
+      }
+
+      if (mobilePlayerControls) {
+        mobilePlayerControls.style.opacity = ""
+      }
+    }, 3000)
   }
 
   // Notification system
@@ -630,7 +1217,17 @@ document.addEventListener("DOMContentLoaded", () => {
     // Create notification element
     const notification = document.createElement("div")
     notification.className = `notification ${type}`
-    notification.textContent = message
+
+    // Add icon based on type
+    let icon = "info-circle"
+    if (type === "success") icon = "check-circle"
+    if (type === "warning") icon = "exclamation-triangle"
+    if (type === "error") icon = "times-circle"
+
+    notification.innerHTML = `
+    <i class="fas fa-${icon}"></i>
+    <span>${message}</span>
+  `
 
     // Add to body
     document.body.appendChild(notification)
@@ -649,54 +1246,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 3000)
   }
 
-  // Add swipe gestures for mobile
-  let touchStartX = 0
-  let touchEndX = 0
+  // Handle window resize
+  window.addEventListener("resize", () => {
+    // Re-show controls on resize
+    showControls()
+  })
 
-  videoContainer.addEventListener(
-    "touchstart",
-    (e) => {
-      touchStartX = e.changedTouches[0].screenX
-    },
-    false,
-  )
-
-  videoContainer.addEventListener(
-    "touchend",
-    (e) => {
-      touchEndX = e.changedTouches[0].screenX
-      handleSwipe()
-    },
-    false,
-  )
-
-  function handleSwipe() {
-    const swipeThreshold = 100
-
-    if (touchEndX < touchStartX - swipeThreshold) {
-      // Swipe left - next stream
-      const nextIndex = (currentStreamIndex + 1) % channel.streamOptions.length
-      loadStream(nextIndex)
-      showNotification("Siguiente opción", "info")
-    }
-
-    if (touchEndX > touchStartX + swipeThreshold) {
-      // Swipe right - previous stream
-      const prevIndex = (currentStreamIndex - 1 + channel.streamOptions.length) % channel.streamOptions.length
-      loadStream(prevIndex)
-      showNotification("Opción anterior", "info")
-    }
-  }
-
-  // Show controls on touch for mobile
-  videoContainer.addEventListener("touchstart", () => {
-    if (playerControlsOverlay) {
-      playerControlsOverlay.style.opacity = "1"
-
-      // Hide controls after 3 seconds
-      setTimeout(() => {
-        playerControlsOverlay.style.opacity = ""
-      }, 3000)
+  // Limpiar intervalos cuando se abandona la página
+  window.addEventListener("beforeunload", () => {
+    if (connectionCheckInterval) {
+      clearInterval(connectionCheckInterval)
     }
   })
 })
