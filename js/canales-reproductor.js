@@ -63,6 +63,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let videoLoadingTimeout = null
   let streamQuality = "SD"
   let shareUrl = ""
+  let historyUpdateTimeout = null
+  let streamChangeInProgress = false
 
   // Check for dark mode preference
   const prefersDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
@@ -381,6 +383,7 @@ document.addEventListener("DOMContentLoaded", () => {
         "aria-label",
         `${option.name} ${option.isWorking ? "(Funcionando)" : "(Puede tener problemas)"}`,
       )
+      button.setAttribute("data-index", index.toString())
 
       // Add response time indicator if available
       if (option.responseTime) {
@@ -392,7 +395,10 @@ document.addEventListener("DOMContentLoaded", () => {
         button.appendChild(responseIcon)
       }
 
-      button.addEventListener("click", () => loadStream(index))
+      button.addEventListener("click", () => {
+        if (streamChangeInProgress) return
+        loadStream(index)
+      })
       mainOptionsContainer.appendChild(button)
     })
 
@@ -424,6 +430,7 @@ document.addEventListener("DOMContentLoaded", () => {
       button.className = "stream-option-btn"
       button.textContent = relatedChannel.name
       button.addEventListener("click", () => {
+        if (streamChangeInProgress) return
         loadExternalStream(relatedChannel.url)
         showNotification(`Cambiando a ${relatedChannel.name}`, "info")
       })
@@ -434,9 +441,12 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function loadStream(index) {
-    if (!channel.streamOptions || !channel.streamOptions[index]) {
+    if (!channel.streamOptions || !channel.streamOptions[index] || streamChangeInProgress) {
       return
     }
+
+    // Establecer que hay un cambio de stream en progreso
+    streamChangeInProgress = true
 
     // Clear any existing auto-switch timer
     if (autoSwitchTimer) {
@@ -448,8 +458,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Update active button
     const buttons = document.querySelectorAll(".stream-option-btn")
-    buttons.forEach((btn, i) => {
-      if (i === index) {
+    buttons.forEach((btn) => {
+      const btnIndex = Number.parseInt(btn.getAttribute("data-index") || "-1")
+      if (btnIndex === index) {
         btn.classList.add("active")
       } else {
         btn.classList.remove("active")
@@ -480,10 +491,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Update mobile controls state
     updateMobileControlsState()
+
+    // Restablecer el estado de cambio de stream después de un tiempo
+    setTimeout(() => {
+      streamChangeInProgress = false
+    }, 1500)
   }
 
   function loadPreviousStream() {
-    if (!channel.streamOptions || channel.streamOptions.length <= 1) return
+    if (!channel.streamOptions || channel.streamOptions.length <= 1 || streamChangeInProgress) return
 
     const prevIndex = (currentStreamIndex - 1 + channel.streamOptions.length) % channel.streamOptions.length
     loadStream(prevIndex)
@@ -491,7 +507,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function loadNextStream() {
-    if (!channel.streamOptions || channel.streamOptions.length <= 1) return
+    if (!channel.streamOptions || channel.streamOptions.length <= 1 || streamChangeInProgress) return
 
     const nextIndex = (currentStreamIndex + 1) % channel.streamOptions.length
     loadStream(nextIndex)
@@ -750,6 +766,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function addToViewHistory(channelId) {
+    // Cancelar cualquier actualización pendiente
+    if (historyUpdateTimeout) {
+      clearTimeout(historyUpdateTimeout)
+    }
+
     const channelToAdd = channels.find((ch) => ch.id === channelId)
 
     if (!channelToAdd) return
@@ -774,8 +795,11 @@ document.addEventListener("DOMContentLoaded", () => {
       viewHistory = viewHistory.slice(0, 10)
     }
 
-    // Save to localStorage
-    saveViewHistory()
+    // Retrasar la actualización para evitar múltiples escrituras
+    historyUpdateTimeout = setTimeout(() => {
+      // Save to localStorage
+      saveViewHistory()
+    }, 1000)
   }
 
   function saveViewHistory() {
@@ -792,6 +816,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (savedHistory) {
       try {
         viewHistory = JSON.parse(savedHistory)
+
+        // Validar la estructura de los datos
+        viewHistory = viewHistory.filter(
+          (item) => item && typeof item === "object" && item.id && item.name && item.timestamp,
+        )
       } catch (error) {
         console.error("Error loading view history from localStorage:", error)
         viewHistory = []
@@ -800,45 +829,67 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderViewHistory() {
-    if (!historySection || !historyList || viewHistory.length <= 1) {
-      if (historySection) {
-        historySection.style.display = "none"
-      }
+    if (!historySection || !historyList) {
       return
     }
 
-    // Filter out current channel from history
+    // Filtrar el historial para eliminar el canal actual
     const filteredHistory = viewHistory.filter((item) => item.id !== channel.id)
 
+    // Ocultar la sección si no hay historial o solo hay un elemento (el actual)
     if (filteredHistory.length === 0) {
       historySection.style.display = "none"
       return
     }
 
+    // Mostrar la sección y limpiar la lista
     historySection.style.display = "block"
     historyList.innerHTML = ""
 
-    // Show only the first 5 items
-    filteredHistory.slice(0, 5).forEach((item) => {
+    // Mostrar solo los primeros 5 elementos con animación escalonada
+    filteredHistory.slice(0, 5).forEach((item, index) => {
       const historyItem = document.createElement("div")
       historyItem.className = "history-item"
-      historyItem.addEventListener("click", () => {
-        window.location.href = `canales-reproductor.html?id=${item.id}`
+      historyItem.style.animationDelay = `${index * 0.1}s`
+
+      // Añadir atributos para accesibilidad
+      historyItem.setAttribute("role", "button")
+      historyItem.setAttribute("aria-label", `Ver canal ${item.name}`)
+      historyItem.setAttribute("tabindex", "0")
+
+      // Añadir eventos para mouse y teclado
+      historyItem.addEventListener("click", () => navigateToChannel(item.id))
+      historyItem.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault()
+          navigateToChannel(item.id)
+        }
       })
 
-      // Format time ago
+      // Formatear tiempo transcurrido
       const timeAgo = getTimeAgo(new Date(item.timestamp))
 
+      // Crear contenido del elemento
       historyItem.innerHTML = `
-      <img src="${item.logo || "placeholder.svg"}" alt="${item.name}" class="history-item-logo" loading="lazy">
-      <div class="history-item-info">
-        <span class="history-item-name">${item.name}</span>
-        <span class="history-item-time">${timeAgo}</span>
-      </div>
-    `
+        <img src="${item.logo || "placeholder.svg"}" alt="${item.name}" class="history-item-logo" loading="lazy">
+        <div class="history-item-info">
+          <span class="history-item-name">${item.name}</span>
+          <span class="history-item-time">${timeAgo}</span>
+        </div>
+      `
 
       historyList.appendChild(historyItem)
     })
+  }
+
+  // Función para navegar a otro canal
+  function navigateToChannel(channelId) {
+    // Guardar el estado actual antes de navegar
+    addToViewHistory(channel.id)
+    saveViewHistory()
+
+    // Navegar al nuevo canal
+    window.location.href = `canales-reproductor.html?id=${channelId}`
   }
 
   // Helper function to format time ago
@@ -1105,7 +1156,9 @@ document.addEventListener("DOMContentLoaded", () => {
       offlineNotification.classList.remove("visible")
     })
 
-    offlineNotification.appendChild(closeOfflineBtn)
+    if (offlineNotification && !offlineNotification.querySelector(".close-offline-notification")) {
+      offlineNotification.appendChild(closeOfflineBtn)
+    }
   }
 
   // Setup scroll listener for scroll-to-top button
@@ -1158,7 +1211,7 @@ document.addEventListener("DOMContentLoaded", () => {
   )
 
   function handleSwipe(touchEndX, touchEndY) {
-    if (!touchStartX || !touchStartY) return
+    if (!touchStartX || !touchStartY || streamChangeInProgress) return
 
     const swipeThreshold = 100
     const diffX = touchEndX - touchStartX
@@ -1257,6 +1310,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (connectionCheckInterval) {
       clearInterval(connectionCheckInterval)
     }
+
+    // Guardar historial antes de salir
+    saveViewHistory()
   })
 })
 
