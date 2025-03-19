@@ -44,9 +44,16 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentSort = "name"
   let currentPage = 1
   let itemsPerPage = 20
-  // Estado de conexión
   let isOffline = false
   let connectionCheckInterval = null
+  let channelsCache = null
+  let lastFetchTime = 0
+  let touchStartX = 0
+  let touchStartY = 0
+  let historyUpdateTimeout = null
+  let paginationClickInProgress = false
+  let recentlyViewedUpdateInProgress = false
+  let lastHistoryRender = 0
 
   // Función para verificar la conexión a internet de forma activa
   function checkInternetConnection() {
@@ -95,10 +102,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return false
       })
   }
-  let channelsCache = null
-  let lastFetchTime = 0
-  let touchStartX = 0
-  let touchStartY = 0
 
   // Check for dark mode preference
   const prefersDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
@@ -241,6 +244,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const urlSearchQuery = urlParams.get("search")
   const urlCategory = urlParams.get("category")
   const urlFavorites = urlParams.get("favorites")
+  const urlPage = urlParams.get("page")
 
   if (urlSearchQuery) {
     searchQuery = urlSearchQuery
@@ -253,8 +257,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (urlFavorites === "true") {
     showOnlyFavorites = true
-    favoritesToggle.classList.add("active")
-    favoritesToggle.innerHTML = '<i class="fas fa-heart"></i> Mostrando favoritos'
+    if (favoritesToggle) {
+      favoritesToggle.classList.add("active")
+      favoritesToggle.innerHTML = '<i class="fas fa-heart"></i> Mostrando favoritos'
+    }
+  }
+
+  if (urlPage && !isNaN(Number.parseInt(urlPage))) {
+    currentPage = Number.parseInt(urlPage)
   }
 
   // Initialize
@@ -262,38 +272,7 @@ document.addEventListener("DOMContentLoaded", () => {
   addSwipeSupport()
   setupPullToRefresh()
   setupScrollListener()
-  // Setup network status listeners
-  function setupNetworkStatusListeners() {
-    // Verificar estado inicial de conexión
-    checkInternetConnection()
-
-    // Configurar intervalo para verificar la conexión periódicamente
-    connectionCheckInterval = setInterval(checkInternetConnection, 30000)
-
-    // Listeners para eventos de conexión del navegador
-    window.addEventListener("online", () => {
-      // Verificar si realmente hay conexión (los eventos pueden ser poco confiables)
-      checkInternetConnection()
-    })
-
-    window.addEventListener("offline", () => {
-      isOffline = true
-      offlineNotification.classList.add("visible")
-      showNotification("Sin conexión a internet", "warning")
-    })
-
-    // Agregar botón para cerrar la notificación
-    const closeOfflineBtn = document.createElement("button")
-    closeOfflineBtn.className = "close-offline-notification"
-    closeOfflineBtn.innerHTML = '<i class="fas fa-times"></i>'
-    closeOfflineBtn.setAttribute("aria-label", "Cerrar notificación")
-    closeOfflineBtn.addEventListener("click", (e) => {
-      e.preventDefault()
-      offlineNotification.classList.remove("visible")
-    })
-
-    offlineNotification.appendChild(closeOfflineBtn)
-  }
+  setupNetworkStatusListeners()
   loadViewMode()
   renderRecentlyViewed()
 
@@ -447,8 +426,6 @@ document.addEventListener("DOMContentLoaded", () => {
     showNotification("Filtros restablecidos", "info")
   }
 
-  // Modificar la función para que en móviles siempre se use la vista de lista
-
   // Actualizar la función loadViewMode para forzar vista de lista en móviles
   function loadViewMode() {
     const savedViewMode = localStorage.getItem("viewMode")
@@ -518,6 +495,13 @@ document.addEventListener("DOMContentLoaded", () => {
       url.searchParams.set("favorites", "true")
     } else {
       url.searchParams.delete("favorites")
+    }
+
+    // Update or remove page parameter
+    if (currentPage > 1) {
+      url.searchParams.set("page", currentPage.toString())
+    } else {
+      url.searchParams.delete("page")
     }
 
     // Update URL without reloading the page
@@ -736,11 +720,11 @@ document.addEventListener("DOMContentLoaded", () => {
     prevButton.className = `pagination-button ${currentPage === 1 ? "disabled" : ""}`
     prevButton.innerHTML = '<i class="fas fa-chevron-left"></i>'
     prevButton.disabled = currentPage === 1
-    prevButton.addEventListener("click", () => {
-      if (currentPage > 1) {
-        currentPage--
-        renderChannels()
-        window.scrollTo({ top: 0, behavior: "smooth" })
+    prevButton.setAttribute("aria-label", "Página anterior")
+    prevButton.addEventListener("click", (e) => {
+      e.preventDefault()
+      if (currentPage > 1 && !paginationClickInProgress) {
+        changePage(currentPage - 1)
       }
     })
     pagination.appendChild(prevButton)
@@ -760,10 +744,12 @@ document.addEventListener("DOMContentLoaded", () => {
       const firstPageButton = document.createElement("button")
       firstPageButton.className = "pagination-button"
       firstPageButton.textContent = "1"
-      firstPageButton.addEventListener("click", () => {
-        currentPage = 1
-        renderChannels()
-        window.scrollTo({ top: 0, behavior: "smooth" })
+      firstPageButton.setAttribute("aria-label", "Ir a la página 1")
+      firstPageButton.addEventListener("click", (e) => {
+        e.preventDefault()
+        if (!paginationClickInProgress) {
+          changePage(1)
+        }
       })
       pagination.appendChild(firstPageButton)
 
@@ -772,6 +758,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const ellipsis = document.createElement("span")
         ellipsis.className = "pagination-ellipsis"
         ellipsis.textContent = "..."
+        ellipsis.setAttribute("aria-hidden", "true")
         pagination.appendChild(ellipsis)
       }
     }
@@ -781,10 +768,15 @@ document.addEventListener("DOMContentLoaded", () => {
       const pageButton = document.createElement("button")
       pageButton.className = `pagination-button ${i === currentPage ? "active" : ""}`
       pageButton.textContent = i.toString()
-      pageButton.addEventListener("click", () => {
-        currentPage = i
-        renderChannels()
-        window.scrollTo({ top: 0, behavior: "smooth" })
+      pageButton.setAttribute("aria-label", `Ir a la página ${i}`)
+      if (i === currentPage) {
+        pageButton.setAttribute("aria-current", "page")
+      }
+      pageButton.addEventListener("click", (e) => {
+        e.preventDefault()
+        if (i !== currentPage && !paginationClickInProgress) {
+          changePage(i)
+        }
       })
       pagination.appendChild(pageButton)
     }
@@ -796,6 +788,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const ellipsis = document.createElement("span")
         ellipsis.className = "pagination-ellipsis"
         ellipsis.textContent = "..."
+        ellipsis.setAttribute("aria-hidden", "true")
         pagination.appendChild(ellipsis)
       }
 
@@ -803,10 +796,12 @@ document.addEventListener("DOMContentLoaded", () => {
       const lastPageButton = document.createElement("button")
       lastPageButton.className = "pagination-button"
       lastPageButton.textContent = totalPages.toString()
-      lastPageButton.addEventListener("click", () => {
-        currentPage = totalPages
-        renderChannels()
-        window.scrollTo({ top: 0, behavior: "smooth" })
+      lastPageButton.setAttribute("aria-label", `Ir a la página ${totalPages}`)
+      lastPageButton.addEventListener("click", (e) => {
+        e.preventDefault()
+        if (!paginationClickInProgress) {
+          changePage(totalPages)
+        }
       })
       pagination.appendChild(lastPageButton)
     }
@@ -816,17 +811,40 @@ document.addEventListener("DOMContentLoaded", () => {
     nextButton.className = `pagination-button ${currentPage === totalPages ? "disabled" : ""}`
     nextButton.innerHTML = '<i class="fas fa-chevron-right"></i>'
     nextButton.disabled = currentPage === totalPages
-    nextButton.addEventListener("click", () => {
-      if (currentPage < totalPages) {
-        currentPage++
-        renderChannels()
-        window.scrollTo({ top: 0, behavior: "smooth" })
+    nextButton.setAttribute("aria-label", "Página siguiente")
+    nextButton.addEventListener("click", (e) => {
+      e.preventDefault()
+      if (currentPage < totalPages && !paginationClickInProgress) {
+        changePage(currentPage + 1)
       }
     })
     pagination.appendChild(nextButton)
   }
 
-  // Modificar la función renderChannels para que en móviles siempre use la vista de lista
+  // Función para cambiar de página con protección contra clics múltiples
+  function changePage(pageNumber) {
+    if (paginationClickInProgress) return
+
+    // Activar protección contra clics múltiples
+    paginationClickInProgress = true
+
+    // Actualizar página actual
+    currentPage = pageNumber
+
+    // Actualizar URL
+    updateURL()
+
+    // Renderizar canales
+    renderChannels()
+
+    // Desplazarse al inicio
+    window.scrollTo({ top: 0, behavior: "smooth" })
+
+    // Desactivar protección después de un tiempo
+    setTimeout(() => {
+      paginationClickInProgress = false
+    }, 500)
+  }
 
   function renderChannels() {
     if (!channelsGrid) return
@@ -879,7 +897,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const card = document.createElement("div")
     card.className = "channel-card slide-in-up"
     card.setAttribute("data-id", channel.id)
+    card.setAttribute("role", "button")
+    card.setAttribute("tabindex", "0")
+    card.setAttribute("aria-label", `Ver canal ${channel.name}`)
+
+    // Añadir eventos para mouse y teclado
     card.addEventListener("click", () => navigateToPlayer(channel.id))
+    card.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault()
+        navigateToPlayer(channel.id)
+      }
+    })
 
     // Check if channel is favorite
     const isFavorite = channel.favorite || false
@@ -914,6 +943,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const favoriteButton = card.querySelector(".favorite-button")
     favoriteButton.addEventListener("click", (e) => {
       e.stopPropagation() // Prevent card click
+      e.preventDefault() // Prevent default button behavior
       toggleFavorite(channel.id)
     })
 
@@ -924,7 +954,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const listItem = document.createElement("div")
     listItem.className = "channel-list-item slide-in-up"
     listItem.setAttribute("data-id", channel.id)
+    listItem.setAttribute("role", "button")
+    listItem.setAttribute("tabindex", "0")
+    listItem.setAttribute("aria-label", `Ver canal ${channel.name}`)
+
+    // Añadir eventos para mouse y teclado
     listItem.addEventListener("click", () => navigateToPlayer(channel.id))
+    listItem.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault()
+        navigateToPlayer(channel.id)
+      }
+    })
 
     // Check if channel is favorite
     const isFavorite = channel.favorite || false
@@ -959,6 +1000,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const favoriteButton = listItem.querySelector(".favorite-button")
     favoriteButton.addEventListener("click", (e) => {
       e.stopPropagation() // Prevent item click
+      e.preventDefault() // Prevent default button behavior
       toggleFavorite(channel.id)
     })
 
@@ -1053,6 +1095,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function addToViewHistory(channelId) {
+    // Cancelar cualquier actualización pendiente
+    if (historyUpdateTimeout) {
+      clearTimeout(historyUpdateTimeout)
+    }
+
     const channel = channels.find((ch) => ch.id === channelId)
 
     if (!channel) return
@@ -1077,11 +1124,14 @@ document.addEventListener("DOMContentLoaded", () => {
       viewHistory = viewHistory.slice(0, 10)
     }
 
-    // Save to localStorage
-    saveViewHistory()
+    // Retrasar la actualización para evitar múltiples escrituras
+    historyUpdateTimeout = setTimeout(() => {
+      // Save to localStorage
+      saveViewHistory()
 
-    // Update recently viewed section
-    renderRecentlyViewed()
+      // Actualizar la sección de vistos recientemente
+      renderRecentlyViewed()
+    }, 1000)
   }
 
   function saveViewHistory() {
@@ -1098,6 +1148,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (savedHistory) {
       try {
         viewHistory = JSON.parse(savedHistory)
+
+        // Validar la estructura de los datos
+        viewHistory = viewHistory.filter(
+          (item) => item && typeof item === "object" && item.id && item.name && item.timestamp,
+        )
       } catch (error) {
         console.error("Error loading view history from localStorage:", error)
         viewHistory = []
@@ -1106,48 +1161,78 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderRecentlyViewed() {
-    if (!recentlyViewed || !recentlyViewedList) return
+    if (!recentlyViewed || !recentlyViewedList || recentlyViewedUpdateInProgress) return
+
+    // Evitar múltiples renderizados en poco tiempo
+    const now = Date.now()
+    if (now - lastHistoryRender < 1000) return
+    lastHistoryRender = now
+
+    // Marcar como en progreso
+    recentlyViewedUpdateInProgress = true
 
     // Hide section if no history
     if (viewHistory.length === 0) {
       recentlyViewed.style.display = "none"
+      recentlyViewedUpdateInProgress = false
       return
     }
 
+    // Mostrar la sección y preparar para la animación
     recentlyViewed.style.display = "block"
-    recentlyViewedList.innerHTML = ""
+    recentlyViewedList.style.opacity = "0"
 
-    // Show only the first 6 items
-    viewHistory.slice(0, 6).forEach((item) => {
-      const historyItem = document.createElement("div")
-      historyItem.className = "recently-viewed-item"
-      historyItem.addEventListener("click", () => {
-        navigateToPlayer(item.id)
+    setTimeout(() => {
+      recentlyViewedList.innerHTML = ""
+
+      // Show only the first 6 items with animation
+      viewHistory.slice(0, 6).forEach((item, index) => {
+        const historyItem = document.createElement("div")
+        historyItem.className = "recently-viewed-item"
+        historyItem.style.animationDelay = `${index * 0.1}s`
+        historyItem.setAttribute("role", "button")
+        historyItem.setAttribute("tabindex", "0")
+        historyItem.setAttribute("aria-label", `Ver canal ${item.name}`)
+
+        // Añadir eventos para mouse y teclado
+        historyItem.addEventListener("click", () => navigateToPlayer(item.id))
+        historyItem.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault()
+            navigateToPlayer(item.id)
+          }
+        })
+
+        // Format time ago
+        const timeAgo = getTimeAgo(new Date(item.timestamp))
+
+        historyItem.innerHTML = `
+          <div class="recently-viewed-thumbnail">
+            <img src="${item.logo || "placeholder.svg"}" alt="${item.name}" loading="lazy">
+            <div class="recently-viewed-overlay">
+              <div class="play-icon">
+                <i class="fas fa-play"></i>
+              </div>
+            </div>
+          </div>
+          <div class="recently-viewed-info">
+            <h4>${item.name}</h4>
+            <div class="recently-viewed-meta">
+              <span class="recently-viewed-category">${item.category}</span>
+              <span class="recently-viewed-time">${timeAgo}</span>
+            </div>
+          </div>
+        `
+
+        recentlyViewedList.appendChild(historyItem)
       })
 
-      // Format time ago
-      const timeAgo = getTimeAgo(new Date(item.timestamp))
+      // Mostrar con animación
+      recentlyViewedList.style.opacity = "1"
 
-      historyItem.innerHTML = `
-      <div class="recently-viewed-thumbnail">
-        <img src="${item.logo || "placeholder.svg"}" alt="${item.name}" loading="lazy">
-        <div class="recently-viewed-overlay">
-          <div class="play-icon">
-            <i class="fas fa-play"></i>
-          </div>
-        </div>
-      </div>
-      <div class="recently-viewed-info">
-        <h4>${item.name}</h4>
-        <div class="recently-viewed-meta">
-          <span class="recently-viewed-category">${item.category}</span>
-          <span class="recently-viewed-time">${timeAgo}</span>
-        </div>
-      </div>
-    `
-
-      recentlyViewedList.appendChild(historyItem)
-    })
+      // Marcar como completado
+      recentlyViewedUpdateInProgress = false
+    }, 200)
   }
 
   // Helper function to format time ago
@@ -1244,7 +1329,7 @@ document.addEventListener("DOMContentLoaded", () => {
           e.preventDefault() // Prevent page scroll
         }
       },
-      { passive: true },
+      { passive: false },
     )
 
     channelsGrid.addEventListener(
@@ -1384,6 +1469,41 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   }
 
+  // Setup network status listeners
+  function setupNetworkStatusListeners() {
+    // Verificar estado inicial de conexión
+    checkInternetConnection()
+
+    // Configurar intervalo para verificar la conexión periódicamente
+    connectionCheckInterval = setInterval(checkInternetConnection, 30000)
+
+    // Listeners para eventos de conexión del navegador
+    window.addEventListener("online", () => {
+      // Verificar si realmente hay conexión (los eventos pueden ser poco confiables)
+      checkInternetConnection()
+    })
+
+    window.addEventListener("offline", () => {
+      isOffline = true
+      offlineNotification.classList.add("visible")
+      showNotification("Sin conexión a internet", "warning")
+    })
+
+    // Agregar botón para cerrar la notificación
+    const closeOfflineBtn = document.createElement("button")
+    closeOfflineBtn.className = "close-offline-notification"
+    closeOfflineBtn.innerHTML = '<i class="fas fa-times"></i>'
+    closeOfflineBtn.setAttribute("aria-label", "Cerrar notificación")
+    closeOfflineBtn.addEventListener("click", (e) => {
+      e.preventDefault()
+      offlineNotification.classList.remove("visible")
+    })
+
+    if (offlineNotification && !offlineNotification.querySelector(".close-offline-notification")) {
+      offlineNotification.appendChild(closeOfflineBtn)
+    }
+  }
+
   // Notification system
   function showNotification(message, type = "info") {
     // Remove any existing notification
@@ -1395,6 +1515,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // Create notification element
     const notification = document.createElement("div")
     notification.className = `notification ${type}`
+    notification.setAttribute("role", "alert")
+    notification.setAttribute("aria-live", "polite")
 
     // Add icon based on type
     let icon = "info-circle"
@@ -1473,6 +1595,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (connectionCheckInterval) {
       clearInterval(connectionCheckInterval)
     }
+
+    // Guardar historial antes de salir
+    saveViewHistory()
   })
 })
 
