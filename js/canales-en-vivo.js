@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let showOnlyFavorites = false
   let viewHistory = []
   let isGridView = true
-  let currentSort = "name"
+  let currentSort = "recent"
   let currentPage = 1
   let itemsPerPage = 20
   let isOffline = false
@@ -130,9 +130,15 @@ document.addEventListener("DOMContentLoaded", () => {
       searchInput.value = ""
       searchQuery = ""
       filterChannels()
+      
       searchInput.focus()
     })
   }
+
+  if (sortSelect) {
+    sortSelect.value = "recent" // establecer el valor por defecto en el select
+  }
+  
 
   // Search toggle for mobile
   if (searchToggle) {
@@ -1600,4 +1606,3 @@ document.addEventListener("DOMContentLoaded", () => {
     saveViewHistory()
   })
 })
-

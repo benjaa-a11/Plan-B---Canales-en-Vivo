@@ -18,17 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const errorMessage = document.getElementById("errorMessage")
   const historySection = document.getElementById("historySection")
   const historyList = document.getElementById("historyList")
-  const pipButton = document.getElementById("pipButton")
-  const fullscreenButton = document.getElementById("fullscreenButton")
-  const mobilePipButton = document.getElementById("mobilePipButton")
-  const mobileFullscreenButton = document.getElementById("mobileFullscreenButton")
-  const prevStreamButton = document.getElementById("prevStreamButton")
-  const nextStreamButton = document.getElementById("nextStreamButton")
   const relatedChannelsContainer = document.getElementById("relatedChannelsContainer")
-  const playerControlsOverlay = document.getElementById("playerControlsOverlay")
-  const mobilePlayerControls = document.getElementById("mobilePlayerControls")
-  const streamQualityIndicator = document.getElementById("streamQualityIndicator")
-  const playerInstructions = document.getElementById("playerInstructions")
   const shareButton = document.getElementById("shareButton")
   const shareModal = document.getElementById("shareModal")
   const closeShareModal = document.getElementById("closeShareModal")
@@ -41,30 +31,34 @@ document.addEventListener("DOMContentLoaded", () => {
   const scrollToTop = document.getElementById("scrollToTop")
   const offlineNotification = document.getElementById("offlineNotification")
   const connectionStatus = document.getElementById("connectionStatus")
+  const playerInstructions = document.getElementById("playerInstructions")
+  const prevStreamButton = document.getElementById("prevStreamButton")
+  const nextStreamButton = document.getElementById("nextStreamButton")
 
   // State
+  // Variables de estado
   let channel = null
   let currentStreamIndex = 0
   let viewHistory = []
   let channels = []
-  let isFullscreen = false
-  let streamErrorCount = 0
-  let autoSwitchTimer = null
   // Estado de conexión
   let isOffline = false
   let connectionCheckInterval = null
   let channelsCache = null
   let lastFetchTime = 0
-  let controlsTimeout = null
+  const controlsTimeout = null
   let touchStartX = 0
   let touchStartY = 0
   let lastTapTime = 0
   let isVideoPlaying = false
   let videoLoadingTimeout = null
-  let streamQuality = "SD"
   let shareUrl = ""
   let historyUpdateTimeout = null
   let streamChangeInProgress = false
+  let streamErrorCount = 0
+  let autoSwitchTimer = null
+  const isFullscreen = false
+  const streamQuality = "SD"
 
   // Check for dark mode preference
   const prefersDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
@@ -83,30 +77,6 @@ document.addEventListener("DOMContentLoaded", () => {
   themeToggle.addEventListener("click", toggleDarkMode)
   backButton.addEventListener("click", goBack)
   notFoundBackButton.addEventListener("click", goBack)
-
-  if (pipButton) {
-    pipButton.addEventListener("click", togglePictureInPicture)
-  }
-
-  if (mobilePipButton) {
-    mobilePipButton.addEventListener("click", togglePictureInPicture)
-  }
-
-  if (fullscreenButton) {
-    fullscreenButton.addEventListener("click", toggleFullscreen)
-  }
-
-  if (mobileFullscreenButton) {
-    mobileFullscreenButton.addEventListener("click", toggleFullscreen)
-  }
-
-  if (prevStreamButton) {
-    prevStreamButton.addEventListener("click", loadPreviousStream)
-  }
-
-  if (nextStreamButton) {
-    nextStreamButton.addEventListener("click", loadNextStream)
-  }
 
   if (shareButton) {
     shareButton.addEventListener("click", openShareModal)
@@ -440,6 +410,7 @@ document.addEventListener("DOMContentLoaded", () => {
     relatedChannelsContainer.appendChild(relatedContainer)
   }
 
+  // Modificar la función loadStream para eliminar la referencia al indicador de calidad
   function loadStream(index) {
     if (!channel.streamOptions || !channel.streamOptions[index] || streamChangeInProgress) {
       return
@@ -483,14 +454,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Show channel switching animation
     showChannelSwitchAnimation()
 
-    // Set stream quality based on name (if it contains HD)
-    streamQuality = streamOption.name.toLowerCase().includes("hd") ? "HD" : "SD"
-    updateStreamQualityIndicator()
-
     loadExternalStream(streamOption.url)
-
-    // Update mobile controls state
-    updateMobileControlsState()
 
     // Restablecer el estado de cambio de stream después de un tiempo
     setTimeout(() => {
@@ -528,24 +492,6 @@ document.addEventListener("DOMContentLoaded", () => {
       nextStreamButton.disabled = false
       prevStreamButton.classList.remove("disabled")
       nextStreamButton.classList.remove("disabled")
-    }
-  }
-
-  function updateStreamQualityIndicator() {
-    // Update quality badge
-    if (streamQualityIndicator) {
-      const qualityBadge = streamQualityIndicator.querySelector(".quality-badge")
-      if (qualityBadge) {
-        qualityBadge.textContent = streamQuality
-        qualityBadge.className = `quality-badge ${streamQuality.toLowerCase()}`
-      }
-    }
-
-    // Update quality in channel info
-    const qualityIndicator = document.getElementById("qualityIndicator")
-    if (qualityIndicator) {
-      qualityIndicator.textContent = streamQuality
-      qualityIndicator.className = streamQuality.toLowerCase()
     }
   }
 
@@ -593,38 +539,73 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function loadExternalStream(url) {
-    // Always use iframe for external streams
+    // Siempre usar iframe para streams externos
     videoElement.style.display = "none"
     videoIframe.style.display = "block"
 
-    // Show loading indicator
+    // Mostrar indicador de carga
     showIframeLoading()
 
-    // Clear any existing timeout
+    // Limpiar cualquier timeout existente
     if (videoLoadingTimeout) {
       clearTimeout(videoLoadingTimeout)
     }
 
-    // Set iframe source
+    // Guardar la URL actual para poder recargar si es necesario
+    videoIframe.setAttribute("data-current-url", url)
+
+    // Establecer origen del iframe
     videoIframe.src = url
 
-    // Handle iframe load event
+    // Manejar evento de carga del iframe
     videoIframe.onload = () => {
       hideIframeLoading()
       isVideoPlaying = true
+
+      // Reiniciar contador de errores al cargar correctamente
+      streamErrorCount = 0
+
+      // Ocultar mensaje de error si estaba visible
+      if (errorMessage.style.display === "block") {
+        errorMessage.style.display = "none"
+
+        // Eliminar botón de cancelar si existe
+        const cancelButton = errorMessage.querySelector("button")
+        if (cancelButton) {
+          cancelButton.remove()
+        }
+      }
     }
 
-    // Handle iframe error
+    // Manejar error del iframe
     videoIframe.onerror = () => {
       handleStreamError()
     }
 
-    // Set a timeout to detect if stream doesn't load properly
+    // Establecer un timeout para detectar si el stream no carga correctamente
     videoLoadingTimeout = setTimeout(() => {
       if (document.getElementById("iframeLoading")) {
         handleStreamError()
       }
-    }, 15000) // 15 seconds timeout
+    }, 15000) // 15 segundos de timeout
+
+    // Añadir botón de recarga al indicador de carga
+    const loadingDiv = document.getElementById("iframeLoading")
+    if (loadingDiv) {
+      const reloadButton = document.createElement("button")
+      reloadButton.className = "secondary-button"
+      reloadButton.style.marginTop = "1rem"
+      reloadButton.innerHTML = '<i class="fas fa-sync-alt"></i> Reintentar'
+      reloadButton.addEventListener("click", () => {
+        // Recargar el stream actual
+        const currentUrl = videoIframe.getAttribute("data-current-url")
+        if (currentUrl) {
+          loadExternalStream(currentUrl)
+        }
+      })
+
+      loadingDiv.appendChild(reloadButton)
+    }
   }
 
   function handleStreamError() {
@@ -632,15 +613,22 @@ document.addEventListener("DOMContentLoaded", () => {
     hideIframeLoading()
     isVideoPlaying = false
 
-    // Show error message
+    // Mostrar mensaje de error
     errorMessage.style.display = "block"
 
-    // If this is the first error for this stream, try to auto-switch to next working stream
+    // Marcar esta opción como no funcionante en la interfaz
+    const currentStreamButton = document.querySelector(`.stream-option-btn[data-index="${currentStreamIndex}"]`)
+    if (currentStreamButton) {
+      currentStreamButton.classList.remove("working")
+      currentStreamButton.classList.add("not-working")
+    }
+
+    // Si es el primer error para este stream, intentar cambiar automáticamente
     if (streamErrorCount === 1 && channel.streamOptions.length > 1) {
-      // Find next working stream
+      // Buscar la siguiente opción que esté marcada como funcionante
       let nextWorkingIndex = -1
 
-      // Start searching from current index + 1
+      // Empezar a buscar desde el índice actual + 1
       for (let i = 1; i < channel.streamOptions.length; i++) {
         const nextIndex = (currentStreamIndex + i) % channel.streamOptions.length
         if (channel.streamOptions[nextIndex].isWorking) {
@@ -649,18 +637,38 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
 
-      // If found a working stream, switch to it automatically after a delay
+      // Si encontramos una opción funcionante, cambiar automáticamente después de un retraso
       if (nextWorkingIndex !== -1) {
-        showNotification("Cambiando automáticamente a otra opción en 5 segundos...", "warning")
+        showNotification(
+          `Cambiando automáticamente a ${channel.streamOptions[nextWorkingIndex].name} en 5 segundos...`,
+          "warning",
+        )
 
         autoSwitchTimer = setTimeout(() => {
           loadStream(nextWorkingIndex)
         }, 5000)
+
+        // Añadir botón para cancelar el cambio automático
+        const cancelButton = document.createElement("button")
+        cancelButton.className = "secondary-button"
+        cancelButton.style.marginTop = "0.5rem"
+        cancelButton.innerHTML = "Cancelar cambio automático"
+        cancelButton.addEventListener("click", () => {
+          if (autoSwitchTimer) {
+            clearTimeout(autoSwitchTimer)
+            autoSwitchTimer = null
+            cancelButton.remove()
+            showNotification("Cambio automático cancelado", "info")
+          }
+        })
+
+        // Añadir el botón al mensaje de error
+        errorMessage.appendChild(cancelButton)
       } else {
         showNotification("No se encontraron opciones alternativas que funcionen", "error")
       }
     } else if (streamErrorCount > 1) {
-      showNotification("Esta transmisión no está funcionando correctamente", "error")
+      showNotification("Esta transmisión no está funcionando correctamente. Intenta con otra opción.", "error")
     }
   }
 
@@ -791,8 +799,8 @@ document.addEventListener("DOMContentLoaded", () => {
     viewHistory.unshift(historyEntry)
 
     // Limit to 10 items
-    if (viewHistory.length > 10) {
-      viewHistory = viewHistory.slice(0, 10)
+    if (viewHistory.length > 6) {
+      viewHistory = viewHistory.slice(0, 6)
     }
 
     // Retrasar la actualización para evitar múltiples escrituras
@@ -828,6 +836,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // Modificar la función renderViewHistory para mostrar la sección al final
   function renderViewHistory() {
     if (!historySection || !historyList) {
       return
@@ -847,7 +856,7 @@ document.addEventListener("DOMContentLoaded", () => {
     historyList.innerHTML = ""
 
     // Mostrar solo los primeros 5 elementos con animación escalonada
-    filteredHistory.slice(0, 5).forEach((item, index) => {
+    filteredHistory.slice(0, 10).forEach((item, index) => {
       const historyItem = document.createElement("div")
       historyItem.className = "history-item"
       historyItem.style.animationDelay = `${index * 0.1}s`
@@ -871,12 +880,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Crear contenido del elemento
       historyItem.innerHTML = `
-        <img src="${item.logo || "placeholder.svg"}" alt="${item.name}" class="history-item-logo" loading="lazy">
-        <div class="history-item-info">
-          <span class="history-item-name">${item.name}</span>
-          <span class="history-item-time">${timeAgo}</span>
-        </div>
-      `
+      <img src="${item.logo || "placeholder.svg"}" alt="${item.name}" class="history-item-logo" loading="lazy">
+      <div class="history-item-info">
+        <span class="history-item-name">${item.name}</span>
+        <span class="history-item-time">${timeAgo}</span>
+      </div>
+    `
 
       historyList.appendChild(historyItem)
     })
@@ -913,85 +922,12 @@ document.addEventListener("DOMContentLoaded", () => {
     return "Justo ahora"
   }
 
-  // Picture-in-Picture functionality
-  async function togglePictureInPicture() {
-    try {
-      if (document.pictureInPictureElement) {
-        await document.exitPictureInPicture()
-        showNotification("Saliendo de Picture-in-Picture", "info")
-      } else if (videoElement && videoElement.style.display !== "none") {
-        // Only works with video element, not iframe
-        await videoElement.requestPictureInPicture()
-        showNotification("Picture-in-Picture activado", "success")
-      } else {
-        // Show notification that PiP is not available for iframes
-        showNotification("Picture-in-Picture no está disponible para este tipo de reproductor", "warning")
-      }
-    } catch (error) {
-      console.error("Error toggling picture-in-picture:", error)
-      showNotification("No se pudo activar Picture-in-Picture", "error")
-    }
-  }
+  // Eliminar togglePictureInPicture
+  // Eliminar toggleFullscreen
+  // Eliminar updateFullscreenButton
+  // Eliminar showControls
 
-  // Fullscreen functionality
-  function toggleFullscreen() {
-    const container = videoContainer
-
-    if (
-      !document.fullscreenElement &&
-      !document.mozFullScreenElement &&
-      !document.webkitFullscreenElement &&
-      !document.msFullscreenElement
-    ) {
-      // Enter fullscreen
-      if (container.requestFullscreen) {
-        container.requestFullscreen()
-      } else if (container.msRequestFullscreen) {
-        container.msRequestFullscreen()
-      } else if (container.mozRequestFullScreen) {
-        container.mozRequestFullScreen()
-      } else if (container.webkitRequestFullscreen) {
-        container.webkitRequestFullscreen()
-      }
-      isFullscreen = true
-      updateFullscreenButton(true)
-      showNotification("Pantalla completa activada", "info")
-    } else {
-      // Exit fullscreen
-      if (document.exitFullscreen) {
-        document.exitFullscreen()
-      } else if (document.msExitFullscreen) {
-        document.msExitFullscreen()
-      } else if (document.mozCancelFullScreen) {
-        document.mozCancelFullScreen()
-      } else if (document.webkitExitFullscreen) {
-        document.webkitExitFullscreen()
-      }
-      isFullscreen = false
-      updateFullscreenButton(false)
-      showNotification("Saliendo de pantalla completa", "info")
-    }
-  }
-
-  // Listen for fullscreen change
-  document.addEventListener("fullscreenchange", () => updateFullscreenButton(!!document.fullscreenElement))
-  document.addEventListener("webkitfullscreenchange", () => updateFullscreenButton(!!document.webkitFullscreenElement))
-  document.addEventListener("mozfullscreenchange", () => updateFullscreenButton(!!document.mozFullScreenElement))
-  document.addEventListener("MSFullscreenChange", () => updateFullscreenButton(!!document.msFullscreenElement))
-
-  function updateFullscreenButton(isFullscreen) {
-    if (fullscreenButton) {
-      fullscreenButton.innerHTML = isFullscreen ? '<i class="fas fa-compress"></i>' : '<i class="fas fa-expand"></i>'
-    }
-
-    if (mobileFullscreenButton) {
-      mobileFullscreenButton.innerHTML = isFullscreen
-        ? '<i class="fas fa-compress"></i>'
-        : '<i class="fas fa-expand"></i>'
-    }
-  }
-
-  // Handle keyboard shortcuts
+  // Eliminar referencias a los eventos de teclado para controles eliminados
   function handleKeyboardShortcuts(e) {
     // Only handle shortcuts if channel is loaded
     if (!channel) return
@@ -1004,21 +940,6 @@ document.addEventListener("DOMContentLoaded", () => {
       case "arrowright":
         // Next stream option
         loadNextStream()
-        break
-      case "f":
-        // Toggle fullscreen
-        toggleFullscreen()
-        break
-      case "p":
-        // Toggle picture-in-picture
-        togglePictureInPicture()
-        break
-      case "m":
-        // Toggle mute (only works with video element)
-        if (videoElement && videoElement.style.display !== "none") {
-          videoElement.muted = !videoElement.muted
-          showNotification(videoElement.muted ? "Sonido silenciado" : "Sonido activado", "info")
-        }
         break
       case "escape":
         // Close share modal if open
@@ -1058,6 +979,35 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function shareVia(platform) {
+    // Verificar si el navegador soporta la API Web Share
+    if (navigator.share && (platform === "native" || platform === "auto")) {
+      try {
+        navigator
+          .share({
+            title: `${channel.name} - Plan B`,
+            text: `Mira ${channel.name} en vivo en Plan B`,
+            url: shareUrl,
+          })
+          .then(() => {
+            showNotification("¡Contenido compartido con éxito!", "success")
+            closeShareModalFunc()
+          })
+          .catch((error) => {
+            console.log("Error al compartir:", error)
+            // Si falla, usar el método tradicional
+            shareViaTraditional(platform === "auto" ? detectBestPlatform() : "whatsapp")
+          })
+        return
+      } catch (err) {
+        console.error("Error con Web Share API:", err)
+      }
+    }
+
+    // Método tradicional si Web Share API no está disponible
+    shareViaTraditional(platform)
+  }
+
+  function shareViaTraditional(platform) {
     let shareLink = ""
     const text = `Mira ${channel.name} en vivo en Plan B`
 
@@ -1074,56 +1024,110 @@ document.addEventListener("DOMContentLoaded", () => {
       case "twitter":
         shareLink = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(shareUrl)}`
         break
+      default:
+        // Si no se especifica plataforma, intentar detectar la mejor opción
+        return shareViaTraditional(detectBestPlatform())
     }
 
     if (shareLink) {
       window.open(shareLink, "_blank")
     }
 
-    // Close modal after sharing
+    // Cerrar modal después de compartir
     closeShareModalFunc()
+  }
+
+  function detectBestPlatform() {
+    // Detectar la plataforma más probable basada en el agente de usuario
+    const userAgent = navigator.userAgent.toLowerCase()
+
+    if (/whatsapp/.test(userAgent)) return "whatsapp"
+    if (/telegram/.test(userAgent)) return "telegram"
+    if (/facebook|fb|fbav/.test(userAgent)) return "facebook"
+    if (/twitter/.test(userAgent)) return "twitter"
+
+    // Por defecto, WhatsApp es la opción más popular
+    return "whatsapp"
   }
 
   // Función para verificar la conexión a internet de forma activa
   function checkInternetConnection() {
-    return fetch("https://www.google.com/favicon.ico", {
-      mode: "no-cors",
-      cache: "no-store",
-      method: "HEAD",
-      timeout: 2000,
-    })
-      .then(() => {
-        if (isOffline) {
-          isOffline = false
-          offlineNotification.classList.remove("visible")
-          showNotification("Conexión restablecida", "success")
+    return new Promise((resolve) => {
+      // Usar un timeout para evitar esperas largas
+      const timeoutId = setTimeout(() => {
+        isOffline = true
+        updateConnectionStatus(false)
+        resolve(false)
+      }, 5000)
 
-          // Actualizar indicador de conexión
-          if (connectionStatus) {
-            connectionStatus.classList.remove("offline")
-            connectionStatus.title = "Conectado a internet"
-            connectionStatus.querySelector(".fa-wifi").style.display = "block"
-            connectionStatus.querySelector(".fa-wifi-slash").style.display = "none"
-          }
-        }
-        return true
+      // Intentar cargar un recurso pequeño de Google
+      fetch("https://www.google.com/favicon.ico", {
+        mode: "no-cors",
+        cache: "no-store",
+        method: "HEAD",
       })
-      .catch(() => {
-        if (!isOffline) {
+        .then(() => {
+          clearTimeout(timeoutId)
+          if (isOffline) {
+            isOffline = false
+            updateConnectionStatus(true)
+          }
+          resolve(true)
+        })
+        .catch(() => {
+          clearTimeout(timeoutId)
           isOffline = true
-          offlineNotification.classList.add("visible")
-          showNotification("Sin conexión a internet. La transmisión puede no funcionar correctamente.", "warning")
+          updateConnectionStatus(false)
+          resolve(false)
+        })
+    })
+  }
 
-          // Actualizar indicador de conexión
-          if (connectionStatus) {
-            connectionStatus.classList.add("offline")
-            connectionStatus.title = "Sin conexión a internet"
-            connectionStatus.querySelector(".fa-wifi").style.display = "none"
-            connectionStatus.querySelector(".fa-wifi-slash").style.display = "block"
-          }
+  function updateConnectionStatus(isOnline) {
+    if (isOnline) {
+      if (offlineNotification) {
+        offlineNotification.classList.remove("visible")
+      }
+
+      if (connectionStatus) {
+        connectionStatus.classList.remove("offline")
+        connectionStatus.title = "Conectado a internet"
+        const wifiIcon = connectionStatus.querySelector(".fa-wifi")
+        const wifiSlashIcon = connectionStatus.querySelector(".fa-wifi-slash")
+        if (wifiIcon) wifiIcon.style.display = "block"
+        if (wifiSlashIcon) wifiSlashIcon.style.display = "none"
+      }
+
+      // Solo mostrar notificación si cambiamos de estado
+      if (document.body.getAttribute("data-was-offline") === "true") {
+        showNotification("Conexión restablecida", "success")
+        document.body.setAttribute("data-was-offline", "false")
+
+        // Recargar el stream actual si estábamos offline
+        if (channel && channel.streamOptions && channel.streamOptions[currentStreamIndex]) {
+          loadStream(currentStreamIndex)
         }
-        return false
-      })
+      }
+    } else {
+      if (offlineNotification) {
+        offlineNotification.classList.add("visible")
+      }
+
+      if (connectionStatus) {
+        connectionStatus.classList.add("offline")
+        connectionStatus.title = "Sin conexión a internet"
+        const wifiIcon = connectionStatus.querySelector(".fa-wifi")
+        const wifiSlashIcon = connectionStatus.querySelector(".fa-wifi-slash")
+        if (wifiIcon) wifiIcon.style.display = "none"
+        if (wifiSlashIcon) wifiSlashIcon.style.display = "block"
+      }
+
+      // Solo mostrar notificación si cambiamos de estado
+      if (document.body.getAttribute("data-was-offline") !== "true") {
+        showNotification("Sin conexión a internet. La transmisión puede no funcionar correctamente.", "warning")
+        document.body.setAttribute("data-was-offline", "true")
+      }
+    }
   }
 
   // Setup network status listeners
@@ -1182,16 +1186,12 @@ document.addEventListener("DOMContentLoaded", () => {
       touchStartX = e.changedTouches[0].screenX
       touchStartY = e.changedTouches[0].screenY
 
-      // Show controls
-      showControls()
-
       // Detect double tap
       const currentTime = new Date().getTime()
       const tapLength = currentTime - lastTapTime
 
       if (tapLength < 300 && tapLength > 0) {
         // Double tap detected
-        toggleFullscreen()
         e.preventDefault()
       }
 
@@ -1230,33 +1230,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     touchStartX = null
     touchStartY = null
-  }
-
-  // Show controls on touch for mobile
-  function showControls() {
-    if (playerControlsOverlay) {
-      playerControlsOverlay.style.opacity = "1"
-    }
-
-    if (mobilePlayerControls) {
-      mobilePlayerControls.style.opacity = "1"
-    }
-
-    // Clear any existing timeout
-    if (controlsTimeout) {
-      clearTimeout(controlsTimeout)
-    }
-
-    // Hide controls after 3 seconds
-    controlsTimeout = setTimeout(() => {
-      if (playerControlsOverlay) {
-        playerControlsOverlay.style.opacity = ""
-      }
-
-      if (mobilePlayerControls) {
-        mobilePlayerControls.style.opacity = ""
-      }
-    }, 3000)
   }
 
   // Notification system
@@ -1302,7 +1275,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // Handle window resize
   window.addEventListener("resize", () => {
     // Re-show controls on resize
-    showControls()
   })
 
   // Limpiar intervalos cuando se abandona la página
@@ -1314,5 +1286,64 @@ document.addEventListener("DOMContentLoaded", () => {
     // Guardar historial antes de salir
     saveViewHistory()
   })
+
+  // Mejorar la experiencia táctil en dispositivos móviles
+  function enhanceMobileExperience() {
+    // Detectar si es un dispositivo móvil
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+
+    if (isMobile) {
+      // Añadir clase al body para estilos específicos de móvil
+      document.body.classList.add("is-mobile-device")
+
+      // Mejorar la interacción táctil con el reproductor
+      if (videoContainer) {
+        // Prevenir zoom en doble toque en iOS
+        videoContainer.style.touchAction = "manipulation"
+
+        // Añadir evento para mostrar controles al tocar
+        videoContainer.addEventListener("touchstart", () => {}, { passive: true })
+
+        // Mejorar la detección de doble toque
+        let lastTap = 0
+        videoContainer.addEventListener("touchend", (e) => {
+          const currentTime = new Date().getTime()
+          const tapLength = currentTime - lastTap
+
+          if (tapLength < 300 && tapLength > 0) {
+            // Prevenir comportamiento por defecto
+            e.preventDefault()
+
+            // Ejecutar acción de doble toque (pantalla completa)
+          }
+
+          lastTap = currentTime
+        })
+      }
+
+      // Optimizar para pantallas pequeñas
+      adjustLayoutForMobile()
+    }
+  }
+
+  function adjustLayoutForMobile() {
+    // Ajustar layout para pantallas pequeñas
+    if (window.innerWidth < 768) {
+      // Mover el historial debajo de las opciones de stream en móvil
+      const historySection = document.getElementById("historySection")
+      const streamOptions = document.getElementById("streamOptions")
+
+      if (historySection && streamOptions && historySection.parentNode) {
+        // Mover el historial después de las opciones de stream
+        streamOptions.parentNode.insertBefore(historySection, streamOptions.nextSibling)
+      }
+
+      // Ajustar tamaño de fuente para mejor legibilidad
+      document.documentElement.style.fontSize = "14px"
+    }
+  }
+
+  // Llamar a la función al final del evento DOMContentLoaded
+  enhanceMobileExperience()
 })
 
