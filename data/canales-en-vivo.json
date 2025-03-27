@@ -1719,37 +1719,37 @@
     "streamOptions": [
       {
         "name": "Opción 1",
-        "url": "https://nebunexa.co/mpdk/?get=aHR0cHM6Ly9zbWNkbjAyLnRyaW1pLmNvbS5hci9saXZlL3NtLWxpdmUvVEVMRUZFX0JBQ0tVUDIvc2FfbGl2ZV9kYXNoL1RFTEVGRV9CQUNLVVAyLm1wZA==&key=OWI3OTA0ZjhiNzE2NGRmZDg4YzNjNDE5YjkzMGRhN2Q=&key2=YTMzYWVmMzEyMmYyMWMyNGU4NWNmMTBjNWY2MWM1ZGY="
-     "isWorking": true
-         },
+        "url": "https://nebunexa.co/mpdk/?get=aHR0cHM6Ly9zbWNkbjAyLnRyaW1pLmNvbS5hci9saXZlL3NtLWxpdmUvVEVMRUZFX0JBQ0tVUDIvc2FfbGl2ZV9kYXNoL1RFTEVGRV9CQUNLVVAyLm1wZA==&key=OWI3OTA0ZjhiNzE2NGRmZDg4YzNjNDE5YjkzMGRhN2Q=&key2=YTMzYWVmMzEyMmYyMWMyNGU4NWNmMTBjNWY2MWM1ZGY=",
+        "isWorking": true
+      },
       {
         "name": "Opción 2 (FL)",
-        "url": "https://television-libre.tv/html/fl/?get=VGVsZWZlSEQ="
-          "isWorking": true
+        "url": "https://television-libre.tv/html/fl/?get=VGVsZWZlSEQ=",
+        "isWorking": true
       },
       {
         "name": "Opción 3",
-        "url": "https://streamtp3.com/global1.php?stream=telefe"
-          "isWorking": true
+        "url": "https://streamtp3.com/global1.php?stream=telefe",
+        "isWorking": true
       },
       {
         "name": "Opción 4",
-        "url": "https://tucanaldeportivo.org/telefe.php"
-          "isWorking": true
+        "url": "https://tucanaldeportivo.org/telefe.php",
+        "isWorking": true
       },
       {
         "name": "Opción 5",
-        "url": "https://television-libre.tv//dpstream1.my/global1.html?channel=telefe"
-          "isWorking": true
+        "url": "https://television-libre.tv//dpstream1.my/global1.html?channel=telefe",
+        "isWorking": true
       },
       {
         "name": "Opción PC (Extensión)",
-        "url": "https://nuskt.directory/ext.html?get=VGVsZWZlSEQ="
-          "isWorking": true
+        "url": "https://nuskt.directory/ext.html?get=VGVsZWZlSEQ=",
+        "isWorking": true
       }
     ],
     "relatedChannels": [],
-    "lastUpdated": "2025-03-27T04:38:28.534Z",
+    "lastUpdated": "2025-03-27T05:31:32.140Z",
     "favorite": true
   },
   {
@@ -1797,7 +1797,7 @@
       }
     ],
     "relatedChannels": [],
-    "lastUpdated": "2025-03-27T04:58:41.119Z",
+    "lastUpdated": "2025-03-27T05:32:12.349Z",
     "favorite": true
   }
 ]
