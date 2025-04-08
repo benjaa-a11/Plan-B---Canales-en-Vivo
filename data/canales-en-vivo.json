@@ -1718,27 +1718,22 @@
     "description": "Telefe es una cadena de televisión abierta argentina perteneciente al conglomerado Paramount Global, que transmite desde la localidad de Martínez, provincia de Buenos Aires. Forma parte de los siete canales de aire nacionales del país. Es el canal de mayor audiencia en Argentina y su principal competidor es Canal 13.",
     "streamOptions": [
       {
-        "name": "Opción 1",
-        "url": "https://nebunexa.co/mpdk/?get=aHR0cHM6Ly9zbWNkbjAyLnRyaW1pLmNvbS5hci9saXZlL3NtLWxpdmUvVEVMRUZFX0JBQ0tVUDIvc2FfbGl2ZV9kYXNoL1RFTEVGRV9CQUNLVVAyLm1wZA==&key=OWI3OTA0ZjhiNzE2NGRmZDg4YzNjNDE5YjkzMGRhN2Q=&key2=YTMzYWVmMzEyMmYyMWMyNGU4NWNmMTBjNWY2MWM1ZGY=",
-        "isWorking": true
-      },
-      {
-        "name": "Opción 2 (FL)",
+        "name": "Opción 1 (FL)",
         "url": "https://television-libre.tv/html/fl/?get=VGVsZWZlSEQ=",
         "isWorking": true
       },
       {
-        "name": "Opción 3",
+        "name": "Opción 2",
         "url": "https://streamtp3.com/global1.php?stream=telefe",
         "isWorking": true
       },
       {
-        "name": "Opción 4",
+        "name": "Opción 3",
         "url": "https://tucanaldeportivo.org/telefe.php",
         "isWorking": true
       },
       {
-        "name": "Opción 5",
+        "name": "Opción 4",
         "url": "https://television-libre.tv//dpstream1.my/global1.html?channel=telefe",
         "isWorking": true
       },
