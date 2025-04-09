@@ -68,6 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const isFullscreen = false
   const streamQuality = "SD"
 
+
   // Check for dark mode preference
   const prefersDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
   const savedTheme = localStorage.getItem("theme")
