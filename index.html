@@ -15,34 +15,85 @@
 </head>
 <body>
 <div class="app-container">
-  <header class="header">
-    <div class="container header-container">
-      <div class="header-left">
-        <a href="index.html" class="logo" aria-label="Plan B">
-          <img src="assets/logo.webp" alt="Plan B" class="logo-img">
-        </a>
-      </div>
-      <div class="header-right">
-        <button class="search-toggle" id="searchToggle" aria-label="Buscar">
-          <i class="fas fa-search"></i>
-        </button>
-        <div class="search-container" id="searchContainer">
-          <i class="fas fa-search search-icon"></i>
-          <input type="search" placeholder="Buscar canales..." class="search-input" id="searchInput" aria-label="Buscar canales">
-          <button class="search-clear" id="searchClear" aria-label="Limpiar búsqueda">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-        <button class="filter-button" id="filterButton" aria-label="Filtros">
-          <i class="fas fa-filter"></i>
-        </button>
-        <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema">
-          <i class="fas fa-moon" id="moonIcon"></i>
-          <i class="fas fa-sun" id="sunIcon" style="display: none;"></i>
-        </button>
-      </div>
+  
+<header class="header">
+  <div class="container header-container">
+    <div class="header-left">
+      <a href="index.html" class="logo" aria-label="Plan B">
+        <img src="assets/logo.webp" alt="Plan B" class="logo-img">
+      </a>
     </div>
-  </header>
+    <div class="header-right">
+      <button class="search-toggle" id="searchToggle" aria-label="Buscar">
+        <i class="fas fa-search"></i>
+      </button>
+      <div class="search-container" id="searchContainer">
+        <i class="fas fa-search search-icon"></i>
+        <input type="search" placeholder="Buscar canales..." class="search-input" id="searchInput" aria-label="Buscar canales">
+        <button class="search-clear" id="searchClear" aria-label="Limpiar búsqueda">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <button class="filter-button" id="filterButton" aria-label="Filtros">
+        <i class="fas fa-filter"></i>
+      </button>
+      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Menú desplegable moderno y unificado -->
+<div class="side-menu" id="sideMenu">
+  <div class="side-menu-header">
+    <img src="assets/logo.webp" alt="Plan B" class="side-menu-logo">
+    <button class="close-menu" id="closeMenu" aria-label="Cerrar menú">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  
+  <div class="side-menu-section">
+    <div class="side-menu-section-title">Navegación</div>
+    <nav class="side-menu-nav">
+      <a href="index.html" class="side-menu-link active">
+        <i class="fas fa-tv"></i>
+        <span>Canales en Vivo</span>
+      </a>
+    </nav>
+  </div>
+  
+  <div class="side-menu-section">
+    <div class="side-menu-section-title">Acciones rápidas</div>
+    <nav class="side-menu-nav">
+      <a href="#" class="side-menu-link" id="favoritesLink">
+        <i class="fas fa-heart"></i>
+        <span>Mis Favoritos</span>
+      </a>
+      <a href="#" class="side-menu-link" id="historyLink">
+        <i class="fas fa-history"></i>
+        <span>Historial</span>
+      </a>
+      <a href="#" class="side-menu-link" id="searchLink">
+        <i class="fas fa-search"></i>
+        <span>Buscar</span>
+      </a>
+      <button class="side-menu-link theme-toggle" id="themeToggle" aria-label="Cambiar tema">
+        <i class="fas fa-moon" id="moonIcon"></i>
+        <i class="fas fa-sun" id="sunIcon" style="display: none;"></i>
+        <span>Cambiar tema</span>
+      </button>
+    </nav>
+  </div>
+  
+  <div class="side-menu-footer">
+    <p class="side-menu-version">Plan B v1.0</p>
+  </div>
+</div>
+<div class="side-menu-overlay" id="sideMenuOverlay"></div>
+
 
   <div class="filters-panel" id="filtersPanel">
     <div class="filters-header">
@@ -116,13 +167,57 @@
     </div>
   </div>
 
-
+  <!-- Nuevo footer mejorado -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-logo">
+        <img src="assets/logo.webp" alt="Plan B" class="footer-logo-img">
+        <p>Tu plataforma de streaming preferida con los mejores canales en vivo y series exclusivas.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Facebook" class="social-icon">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a href="#" aria-label="Twitter" class="social-icon">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="#" aria-label="Instagram" class="social-icon">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="#" aria-label="YouTube" class="social-icon">
+            <i class="fab fa-youtube"></i>
+          </a>
+        </div>
       </div>
-      <div class="footer-bottom">
-        <p>© 2025 Plan B - Canales en Vivo. Todos los derechos reservados.</p>
+      
+      <div class="footer-links">
+        <h3>Enlaces Rápidos</h3>
+        <ul>
+          <li><a href="index.html">Canales en Vivo</a></li>
+          <li><a href="#" id="footer-favorites">Mis Favoritos</a></li>
+          <li><a href="#" id="footer-recent">Vistos Recientemente</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-categories">
+        <h3>Categorías Populares</h3>
+        <div class="footer-categories-list" id="footerCategories">
+          <!-- Se llenará dinámicamente con JavaScript -->
+        </div>
+      </div>
+      
+    
+    <div class="footer-bottom">
+      <p>&copy; 2023 Plan B. Todos los derechos reservados.</p>
+      <div class="footer-bottom-links">
+        <a href="#">Privacidad</a>
+        <a href="#">Términos</a>
+        <a href="#">Ayuda</a>
+        <a href="#">Contacto</a>
       </div>
     </div>
-  </footer>
+  </div>
+</footer>
 
   <button class="scroll-to-top" id="scrollToTop" aria-label="Volver arriba">
     <i class="fas fa-arrow-up"></i>
@@ -132,4 +227,3 @@
 <script src="js/canales-en-vivo.js"></script>
 </body>
 </html>
-
