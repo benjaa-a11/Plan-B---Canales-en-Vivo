@@ -1,4 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // Elementos del menú lateral
+  const menuToggle = document.getElementById("menuToggle")
+  const sideMenu = document.getElementById("sideMenu")
+  const sideMenuOverlay = document.getElementById("sideMenuOverlay")
+  const closeMenu = document.getElementById("closeMenu")
+  const favoritesLink = document.getElementById("favoritesLink")
+  const historyLink = document.getElementById("historyLink")
+  const searchLink = document.getElementById("searchLink")
+
   // DOM Elements
   const themeToggle = document.getElementById("themeToggle")
   const moonIcon = document.getElementById("moonIcon")
@@ -54,6 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let paginationClickInProgress = false
   let recentlyViewedUpdateInProgress = false
   let lastHistoryRender = 0
+  let lastRenderTime = 0
 
   // Función para verificar la conexión a internet de forma activa
   function checkInternetConnection() {
@@ -130,7 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
       searchInput.value = ""
       searchQuery = ""
       filterChannels()
-      
+
       searchInput.focus()
     })
   }
@@ -138,7 +148,6 @@ document.addEventListener("DOMContentLoaded", () => {
   if (sortSelect) {
     sortSelect.value = "recent" // establecer el valor por defecto en el select
   }
-  
 
   // Search toggle for mobile
   if (searchToggle) {
@@ -205,6 +214,122 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (showRecentLink) {
     showRecentLink.addEventListener("click", (e) => {
+      e.preventDefault()
+      if (viewHistory.length > 0) {
+        window.scrollTo({
+          top: recentlyViewed.offsetTop - 100,
+          behavior: "smooth",
+        })
+      } else {
+        showNotification("No tienes canales vistos recientemente", "info")
+      }
+    })
+  }
+
+  // Event listeners para el menú lateral
+  if (menuToggle) {
+    menuToggle.addEventListener("click", toggleMobileMenu)
+  }
+
+  if (closeMenu) {
+    closeMenu.addEventListener("click", closeMobileMenu)
+  }
+
+  if (sideMenuOverlay) {
+    sideMenuOverlay.addEventListener("click", closeMobileMenu)
+  }
+
+  if (favoritesLink) {
+    favoritesLink.addEventListener("click", (e) => {
+      e.preventDefault()
+      showOnlyFavorites = !showOnlyFavorites
+      if (showOnlyFavorites) {
+        showNotification("Mostrando solo favoritos", "info")
+        if (favoritesToggle) {
+          favoritesToggle.classList.add("active")
+          favoritesToggle.innerHTML = '<i class="fas fa-heart"></i> Mostrando favoritos'
+        }
+      } else {
+        showNotification("Mostrando todos los canales", "info")
+        if (favoritesToggle) {
+          favoritesToggle.classList.remove("active")
+          favoritesToggle.innerHTML = '<i class="far fa-heart"></i> Mostrar favoritos'
+        }
+      }
+      filterChannels()
+      closeMobileMenu()
+    })
+  }
+
+  if (historyLink) {
+    historyLink.addEventListener("click", (e) => {
+      e.preventDefault()
+      if (viewHistory.length > 0) {
+        window.scrollTo({
+          top: recentlyViewed.offsetTop - 100,
+          behavior: "smooth",
+        })
+        showNotification("Mostrando historial reciente", "info")
+      } else {
+        showNotification("No tienes canales vistos recientemente", "info")
+      }
+      closeMobileMenu()
+    })
+  }
+
+  if (searchLink) {
+    searchLink.addEventListener("click", (e) => {
+      e.preventDefault()
+      // Abrir la búsqueda
+      searchContainer.classList.add("active")
+      searchToggle.classList.add("active")
+      searchInput.focus()
+      closeMobileMenu()
+    })
+  }
+
+  // Añadir estas líneas al evento DOMContentLoaded, después de las líneas existentes
+  const mobileSearchLink = document.getElementById("mobileSearchLink")
+  const mobileThemeLink = document.getElementById("mobileThemeLink")
+
+  if (mobileSearchLink) {
+    mobileSearchLink.addEventListener("click", (e) => {
+      e.preventDefault()
+      // Abrir la búsqueda
+      searchContainer.classList.add("active")
+      searchToggle.classList.add("active")
+      searchInput.focus()
+      closeMobileMenu()
+    })
+  }
+
+  if (mobileThemeLink) {
+    mobileThemeLink.addEventListener("click", (e) => {
+      e.preventDefault()
+      toggleDarkMode()
+      closeMobileMenu()
+    })
+  }
+
+  // Agregar eventos para los enlaces del footer
+  const footerFavorites = document.getElementById("footer-favorites")
+  const footerRecent = document.getElementById("footer-recent")
+
+  if (footerFavorites) {
+    footerFavorites.addEventListener("click", (e) => {
+      e.preventDefault()
+      showOnlyFavorites = true
+      if (favoritesToggle) {
+        favoritesToggle.classList.add("active")
+        favoritesToggle.innerHTML = '<i class="fas fa-heart"></i> Mostrando favoritos'
+      }
+      filterChannels()
+      window.scrollTo({ top: 0, behavior: "smooth" })
+    })
+  }
+
+  if (footerRecent) {
+    footerRecent.addEventListener("click", (e) => {
       e.preventDefault()
       if (viewHistory.length > 0) {
         window.scrollTo({
@@ -705,6 +830,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // Reemplazar la función renderPagination con esta versión mejorada
   function renderPagination() {
     if (!pagination) return
 
@@ -720,6 +846,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     pagination.style.display = "flex"
+    pagination.classList.add("page-change-animation")
 
     // Previous button
     const prevButton = document.createElement("button")
@@ -736,7 +863,7 @@ document.addEventListener("DOMContentLoaded", () => {
     pagination.appendChild(prevButton)
 
     // Page buttons
-    const maxVisiblePages = 5
+    const maxVisiblePages = window.innerWidth < 640 ? 3 : 5
     let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2))
     const endPage = Math.min(totalPages, startPage + maxVisiblePages - 1)
 
@@ -825,79 +952,128 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     })
     pagination.appendChild(nextButton)
+
+    // Add pagination info
+    const startItem = (currentPage - 1) * itemsPerPage + 1
+    const endItem = Math.min(currentPage * itemsPerPage, filteredChannels.length)
+    const paginationInfo = document.createElement("div")
+    paginationInfo.className = "pagination-info"
+    paginationInfo.textContent = `Mostrando ${startItem}-${endItem} de ${filteredChannels.length} canales`
+    pagination.appendChild(paginationInfo)
   }
 
-  // Función para cambiar de página con protección contra clics múltiples
+  // Reemplazar la función changePage con esta versión mejorada
   function changePage(pageNumber) {
     if (paginationClickInProgress) return
 
     // Activar protección contra clics múltiples
     paginationClickInProgress = true
 
-    // Actualizar página actual
-    currentPage = pageNumber
+    // Guardar la posición de scroll actual
+    const currentScrollPosition = window.scrollY
 
-    // Actualizar URL
-    updateURL()
+    // Añadir efecto de desvanecimiento
+    if (channelsGrid) {
+      channelsGrid.style.opacity = "0"
+      channelsGrid.style.transform = "translateY(20px)"
+    }
 
-    // Renderizar canales
-    renderChannels()
-
-    // Desplazarse al inicio
-    window.scrollTo({ top: 0, behavior: "smooth" })
-
-    // Desactivar protección después de un tiempo
     setTimeout(() => {
-      paginationClickInProgress = false
-    }, 500)
+      // Actualizar página actual
+      currentPage = pageNumber
+
+      // Actualizar URL
+      updateURL()
+
+      // Renderizar canales
+      renderChannels()
+
+      // Desplazarse al inicio con animación suave
+      window.scrollTo({
+        top: 0,
+        behavior: currentScrollPosition > 500 ? "smooth" : "auto",
+      })
+
+      // Renderizar paginación actualizada
+      renderPagination()
+
+      // Restaurar opacidad con animación
+      if (channelsGrid) {
+        setTimeout(() => {
+          channelsGrid.style.opacity = "1"
+          channelsGrid.style.transform = "translateY(0)"
+          channelsGrid.style.transition = "opacity 0.5s ease, transform 0.5s ease"
+        }, 50)
+      }
+
+      // Desactivar protección después de un tiempo
+      setTimeout(() => {
+        paginationClickInProgress = false
+      }, 500)
+    }, 300)
   }
 
+  // Reemplazar la función renderChannels con esta versión mejorada
   function renderChannels() {
     if (!channelsGrid) return
 
-    // Clear current grid with fade-out effect
-    channelsGrid.style.opacity = "0"
+    const now = Date.now()
+    // Evitar múltiples renderizados en un corto período de tiempo (300ms)
+    if (now - lastRenderTime < 300) return
+    lastRenderTime = now
 
-    setTimeout(() => {
-      channelsGrid.innerHTML = ""
+    // Clear current grid
+    channelsGrid.innerHTML = ""
 
-      if (filteredChannels.length === 0) {
-        noResults.style.display = "block"
-        channelsGrid.style.opacity = "1"
-        return
-      }
+    // Configurar transición
+    channelsGrid.style.transition = "opacity 0.5s ease, transform 0.5s ease"
 
-      noResults.style.display = "none"
-
-      // En móviles, siempre usar vista de lista
-      const useGridView = window.innerWidth >= 768 && isGridView
-
-      // Set appropriate class based on view mode
-      channelsGrid.className = useGridView ? "channels-grid" : "channels-list"
-
-      // Get current page of channels
-      const startIndex = (currentPage - 1) * itemsPerPage
-      const endIndex = Math.min(startIndex + itemsPerPage, filteredChannels.length)
-      const currentPageChannels = filteredChannels.slice(startIndex, endIndex)
-
-      // Add channels with staggered animation
-      currentPageChannels.forEach((channel, index) => {
-        const channelCard = useGridView ? createChannelCard(channel) : createChannelListItem(channel)
-
-        // Add staggered animation delay
-        channelCard.style.animationDelay = `${index * 0.05}s`
-        channelsGrid.appendChild(channelCard)
-      })
-
-      // Fade in the grid
+    if (filteredChannels.length === 0) {
+      noResults.style.display = "block"
       channelsGrid.style.opacity = "1"
+      return
+    }
 
-      // Add scroll indicator for mobile grid view (no aplicable ahora)
-      if (useGridView) {
-        addScrollIndicator()
-      }
-    }, 200)
+    noResults.style.display = "none"
+
+    // En móviles, siempre usar vista de lista
+    const useGridView = window.innerWidth >= 768 && isGridView
+
+    // Set appropriate class based on view mode
+    channelsGrid.className = useGridView ? "channels-grid" : "channels-list"
+
+    // Get current page of channels
+    const startIndex = (currentPage - 1) * itemsPerPage
+    const endIndex = Math.min(startIndex + itemsPerPage, filteredChannels.length)
+    const currentPageChannels = filteredChannels.slice(startIndex, endIndex)
+
+    // Crear un fragmento de documento para mejorar rendimiento
+    const fragment = document.createDocumentFragment()
+
+    // Add channels with staggered animation
+    currentPageChannels.forEach((channel, index) => {
+      const channelCard = useGridView ? createChannelCard(channel) : createChannelListItem(channel)
+
+      // Add staggered animation delay
+      channelCard.style.animationDelay = `${index * 0.05}s`
+      fragment.appendChild(channelCard)
+    })
+
+    // Añadir todos los elementos de una vez
+    channelsGrid.appendChild(fragment)
+
+    // Fade in the grid
+    channelsGrid.style.opacity = "1"
+    channelsGrid.style.transform = "translateY(0)"
+
+    // Add scroll indicator for mobile grid view
+    if (useGridView) {
+      addScrollIndicator()
+    }
   }
+
+  // Eliminar las funciones relacionadas con los controles del reproductor
+  // Estas funciones ya no son necesarias
 
   function createChannelCard(channel) {
     const card = document.createElement("div")
@@ -1241,6 +1417,28 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 200)
   }
 
+  // Función para abrir/cerrar el menú lateral
+  function toggleMobileMenu() {
+    menuToggle.classList.toggle("active")
+    sideMenu.classList.toggle("active")
+    sideMenuOverlay.classList.toggle("active")
+
+    // Prevenir scroll cuando el menú está abierto
+    if (sideMenu.classList.contains("active")) {
+      document.body.style.overflow = "hidden"
+    } else {
+      document.body.style.overflow = ""
+    }
+  }
+
+  // Función para cerrar el menú lateral
+  function closeMobileMenu() {
+    menuToggle.classList.remove("active")
+    sideMenu.classList.remove("active")
+    sideMenuOverlay.classList.remove("active")
+    document.body.style.overflow = ""
+  }
+
   // Helper function to format time ago
   function getTimeAgo(date) {
     const now = new Date()
@@ -1285,26 +1483,34 @@ document.addEventListener("DOMContentLoaded", () => {
     channelsGrid.addEventListener("scroll", updateScrollIndicator)
   }
 
+  let scrollIndicatorTimeout
   function updateScrollIndicator() {
     if (window.innerWidth >= 768 || !isGridView || !scrollIndicator) return
 
-    const dots = scrollIndicator.querySelectorAll(".scroll-dot")
-    if (!dots.length) return
+    // Usar throttling para limitar las actualizaciones
+    if (!scrollIndicatorTimeout) {
+      scrollIndicatorTimeout = setTimeout(() => {
+        const dots = scrollIndicator.querySelectorAll(".scroll-dot")
+        if (!dots.length) return
 
-    // Calculate which dot should be active
-    const scrollPosition = channelsGrid.scrollLeft
-    const maxScroll = channelsGrid.scrollWidth - channelsGrid.clientWidth
-    const scrollRatio = scrollPosition / maxScroll
-    const activeDotIndex = Math.min(Math.floor(scrollRatio * dots.length), dots.length - 1)
+        // Calculate which dot should be active
+        const scrollPosition = channelsGrid.scrollLeft
+        const maxScroll = channelsGrid.scrollWidth - channelsGrid.clientWidth
+        const scrollRatio = scrollPosition / maxScroll
+        const activeDotIndex = Math.min(Math.floor(scrollRatio * dots.length), dots.length - 1)
 
-    // Update active dot
-    dots.forEach((dot, index) => {
-      if (index === activeDotIndex) {
-        dot.classList.add("active")
-      } else {
-        dot.classList.remove("active")
-      }
-    })
+        // Update active dot
+        dots.forEach((dot, index) => {
+          if (index === activeDotIndex) {
+            dot.classList.add("active")
+          } else {
+            dot.classList.remove("active")
+          }
+        })
+
+        scrollIndicatorTimeout = null
+      }, 100)
+    }
   }
 
   // Add touch swipe support for mobile
@@ -1465,12 +1671,20 @@ document.addEventListener("DOMContentLoaded", () => {
   function setupScrollListener() {
     if (!scrollToTop) return
 
+    let scrollTimeout
+
     window.addEventListener("scroll", () => {
-      // Show button when scrolled down 300px
-      if (window.scrollY > 300) {
-        scrollToTop.classList.add("visible")
-      } else {
-        scrollToTop.classList.remove("visible")
+      // Usar un timeout para evitar múltiples ejecuciones durante el scroll
+      if (!scrollTimeout) {
+        scrollTimeout = setTimeout(() => {
+          // Show button when scrolled down 300px
+          if (window.scrollY > 300) {
+            scrollToTop.classList.add("visible")
+          } else {
+            scrollToTop.classList.remove("visible")
+          }
+          scrollTimeout = null
+        }, 100)
       }
     })
   }
@@ -1564,6 +1778,9 @@ document.addEventListener("DOMContentLoaded", () => {
       searchContainer.classList.remove("active")
       if (searchToggle) searchToggle.classList.remove("active")
     }
+
+    // Cerrar menú móvil al cambiar el tamaño de la ventana
+    closeMobileMenu()
 
     // Update view mode based on screen size - forzar lista en móviles
     if (window.innerWidth < 768) {

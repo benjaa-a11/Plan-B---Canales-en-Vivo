@@ -1,4 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // Elementos del menú lateral
+  const menuToggle = document.getElementById("menuToggle")
+  const sideMenu = document.getElementById("sideMenu")
+  const sideMenuOverlay = document.getElementById("sideMenuOverlay")
+  const closeMenu = document.getElementById("closeMenu")
+  const shareLink = document.getElementById("shareLink")
+  const favoriteLink = document.getElementById("favoriteLink")
+
   // DOM Elements
   const themeToggle = document.getElementById("themeToggle")
   const moonIcon = document.getElementById("moonIcon")
@@ -115,6 +123,35 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   }
 
+  // Event listeners para el menú lateral
+  if (menuToggle) {
+    menuToggle.addEventListener("click", toggleMobileMenu)
+  }
+
+  if (closeMenu) {
+    closeMenu.addEventListener("click", closeMobileMenu)
+  }
+
+  if (sideMenuOverlay) {
+    sideMenuOverlay.addEventListener("click", closeMobileMenu)
+  }
+
+  if (shareLink) {
+    shareLink.addEventListener("click", (e) => {
+      e.preventDefault()
+      openShareModal()
+      closeMobileMenu()
+    })
+  }
+
+  if (favoriteLink) {
+    favoriteLink.addEventListener("click", (e) => {
+      e.preventDefault()
+      toggleFavorite()
+      closeMobileMenu()
+    })
+  }
+
   // Close share modal when clicking outside
   window.addEventListener("click", (e) => {
     if (
@@ -149,6 +186,27 @@ document.addEventListener("DOMContentLoaded", () => {
   // Setup network status listeners
   setupNetworkStatusListeners()
   setupScrollListener()
+
+  // Eventos para enlaces del footer
+  const footerFavorites = document.getElementById("footer-favorites")
+  const footerRecent = document.getElementById("footer-recent")
+
+  if (footerFavorites) {
+    footerFavorites.addEventListener("click", (e) => {
+      e.preventDefault()
+      window.location.href = "index.html?favorites=true"
+    })
+  }
+
+  if (footerRecent) {
+    footerRecent.addEventListener("click", (e) => {
+      e.preventDefault()
+      window.location.href = "index.html"
+    })
+  }
+
+  // Añadir categorías al footer
+  renderFooterCategories()
 
   // Functions
   function toggleDarkMode() {
@@ -312,6 +370,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 500)
       }, 10000)
     }
+
+    // Mostrar el indicador de swipe
+    setTimeout(showSwipeIndicator, 2000)
   }
 
   function formatLastUpdated(dateString) {
@@ -427,16 +488,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
     currentStreamIndex = index
 
-    // Update active button
+    // Update active button with smooth transition
     const buttons = document.querySelectorAll(".stream-option-btn")
     buttons.forEach((btn) => {
-      const btnIndex = Number.parseInt(btn.getAttribute("data-index") || "-1")
-      if (btnIndex === index) {
-        btn.classList.add("active")
-      } else {
-        btn.classList.remove("active")
-      }
+      btn.classList.remove("active")
+      btn.setAttribute("aria-pressed", "false")
     })
+
+    // Pequeño delay para la animación
+    setTimeout(() => {
+      const activeButton = document.querySelector(`.stream-option-btn[data-index="${index}"]`)
+      if (activeButton) {
+        activeButton.classList.add("active")
+        activeButton.setAttribute("aria-pressed", "true")
+
+        // Hacer scroll hasta el botón activo si está fuera de vista
+        if (activeButton.scrollIntoView) {
+          activeButton.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" })
+        }
+      }
+    }, 50)
 
     const streamOption = channel.streamOptions[index]
 
@@ -446,7 +517,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // Show warning for options marked as not working
     if (!streamOption.isWorking) {
       errorMessage.style.display = "block"
-
       // Reset error count for new stream
       streamErrorCount = 0
     }
@@ -454,12 +524,32 @@ document.addEventListener("DOMContentLoaded", () => {
     // Show channel switching animation
     showChannelSwitchAnimation()
 
+    // Actualizar la URL con el índice de stream para permitir compartir
+    try {
+      const url = new URL(window.location.href)
+      url.searchParams.set("stream", index.toString())
+      window.history.replaceState(null, "", url.toString())
+      // Actualizar también el enlace para compartir
+      shareUrl = url.toString()
+      if (shareUrlInput) {
+        shareUrlInput.value = shareUrl
+      }
+    } catch (e) {
+      console.error("Error updating URL:", e)
+    }
+
     loadExternalStream(streamOption.url)
+
+    // Actualizar el título de la página para incluir la opción de stream
+    document.title = `${channel.name} - ${streamOption.name} - Plan B`
 
     // Restablecer el estado de cambio de stream después de un tiempo
     setTimeout(() => {
       streamChangeInProgress = false
     }, 1500)
+
+    // Actualizar controles móviles
+    updateMobileControlsState()
   }
 
   function loadPreviousStream() {
@@ -554,8 +644,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // Guardar la URL actual para poder recargar si es necesario
     videoIframe.setAttribute("data-current-url", url)
 
+    // Crear un timestamp para evitar la caché
+    const timestamp = new Date().getTime()
+    const urlWithTimestamp = url.includes("?") ? `${url}&_t=${timestamp}` : `${url}?_t=${timestamp}`
+
     // Establecer origen del iframe
-    videoIframe.src = url
+    videoIframe.src = urlWithTimestamp
 
     // Manejar evento de carga del iframe
     videoIframe.onload = () => {
@@ -575,6 +669,9 @@ document.addEventListener("DOMContentLoaded", () => {
           cancelButton.remove()
         }
       }
+
+      // Mostrar una notificación de éxito
+      showNotification("Stream cargado correctamente", "success")
     }
 
     // Manejar error del iframe
@@ -587,11 +684,17 @@ document.addEventListener("DOMContentLoaded", () => {
       if (document.getElementById("iframeLoading")) {
         handleStreamError()
       }
-    }, 15000) // 15 segundos de timeout
+    }, 12000) // 12 segundos de timeout
 
     // Añadir botón de recarga al indicador de carga
     const loadingDiv = document.getElementById("iframeLoading")
     if (loadingDiv) {
+      // Eliminar botón anterior si existe
+      const existingButton = loadingDiv.querySelector("button")
+      if (existingButton) {
+        existingButton.remove()
+      }
+
       const reloadButton = document.createElement("button")
       reloadButton.className = "secondary-button"
       reloadButton.style.marginTop = "1rem"
@@ -606,6 +709,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
       loadingDiv.appendChild(reloadButton)
     }
+
+    // Añadir controles táctiles mejorados para dispositivos móviles
+    enhanceMobileTouchControls()
   }
 
   function handleStreamError() {
@@ -920,6 +1026,28 @@ document.addEventListener("DOMContentLoaded", () => {
       return `Hace ${diffMin} min`
     }
     return "Justo ahora"
+  }
+
+  // Función para abrir/cerrar el menú lateral
+  function toggleMobileMenu() {
+    menuToggle.classList.toggle("active")
+    sideMenu.classList.toggle("active")
+    sideMenuOverlay.classList.toggle("active")
+
+    // Prevenir scroll cuando el menú está abierto
+    if (sideMenu.classList.contains("active")) {
+      document.body.style.overflow = "hidden"
+    } else {
+      document.body.style.overflow = ""
+    }
+  }
+
+  // Función para cerrar el menú lateral
+  function closeMobileMenu() {
+    menuToggle.classList.remove("active")
+    sideMenu.classList.remove("active")
+    sideMenuOverlay.classList.remove("active")
+    document.body.style.overflow = ""
   }
 
   // Eliminar togglePictureInPicture
@@ -1275,6 +1403,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // Handle window resize
   window.addEventListener("resize", () => {
     // Re-show controls on resize
+
+    // Cerrar menú móvil al cambiar el tamaño de la ventana
+    closeMobileMenu()
   })
 
   // Limpiar intervalos cuando se abandona la página
@@ -1345,5 +1476,104 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Llamar a la función al final del evento DOMContentLoaded
   enhanceMobileExperience()
+
+  function enhanceMobileTouchControls() {
+    // Verificar si ya existen los controles
+    if (document.querySelector(".mobile-controls")) {
+      return
+    }
+
+    if (isMobileDevice()) {
+      // Crear contenedor de controles
+      const controlsContainer = document.createElement("div")
+      controlsContainer.className = "mobile-controls"
+
+      // Crear botón anterior
+      const prevButton = document.createElement("button")
+      prevButton.className = "mobile-control-button"
+      prevButton.innerHTML = '<i class="fas fa-step-backward"></i>'
+      prevButton.setAttribute("aria-label", "Stream anterior")
+      prevButton.addEventListener("click", loadPreviousStream)
+
+      // Crear botón siguiente
+      const nextButton = document.createElement("button")
+      nextButton.className = "mobile-control-button"
+      nextButton.innerHTML = '<i class="fas fa-step-forward"></i>'
+      nextButton.setAttribute("aria-label", "Stream siguiente")
+      nextButton.addEventListener("click", loadNextStream)
+
+      // Añadir botones al contenedor
+      controlsContainer.appendChild(prevButton)
+      controlsContainer.appendChild(nextButton)
+
+      // Añadir contenedor al reproductor
+      videoContainer.appendChild(controlsContainer)
+
+      // Actualizar estado de botones
+      if (channel.streamOptions.length <= 1) {
+        prevButton.classList.add("disabled")
+        nextButton.classList.add("disabled")
+      }
+    }
+  }
+
+  function isMobileDevice() {
+    return (
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+      window.innerWidth < 768
+    )
+  }
+
+  function showSwipeIndicator() {
+    // Comprobar si ya existe un indicador
+    if (document.querySelector(".swipe-indicator")) return
+
+    // Solo mostrar en dispositivos móviles
+    if (!isMobileDevice()) return
+
+    // Crear el indicador
+    const indicator = document.createElement("div")
+    indicator.className = "swipe-indicator"
+    indicator.innerHTML = `
+    <div class="swipe-content">
+      <i class="fas fa-arrows-alt-h"></i>
+      <span>Desliza para cambiar de transmisión</span>
+    </div>
+  `
+
+    // Añadir al reproductor
+    videoContainer.appendChild(indicator)
+
+    // Mostrar con animación
+    setTimeout(() => {
+      indicator.classList.add("visible")
+
+      // Ocultar después de unos segundos
+      setTimeout(() => {
+        indicator.classList.remove("visible")
+        setTimeout(() => {
+          indicator.remove()
+        }, 500)
+      }, 3000)
+    }, 1000)
+  }
 })
 
+// Función para renderizar categorías en el footer
+function renderFooterCategories() {
+  const footerCategories = document.getElementById("footerCategories")
+  if (!footerCategories || !channels || channels.length === 0) return
+
+  footerCategories.innerHTML = ""
+
+  // Extraer categorías únicas
+  const allCategories = [...new Set(channels.map((ch) => ch.category))]
+
+  // Mostrar solo las 6 primeras
+  allCategories.slice(0, 6).forEach((category) => {
+    const link = document.createElement("a")
+    link.href = `index.html?category=${encodeURIComponent(category)}`
+    link.textContent = category
+    footerCategories.appendChild(link)
+  })
+}
