@@ -65,6 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let lastHistoryRender = 0
   let lastRenderTime = 0
 
+
   // Función para verificar la conexión a internet de forma activa
   function checkInternetConnection() {
     return fetch("https://www.google.com/favicon.ico", {
