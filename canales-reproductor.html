@@ -23,18 +23,72 @@
           <a href="index.html" class="logo" aria-label="Plan B">
             <img src="assets/logo.webp" alt="Plan B" class="logo-img">
           </a>
+          
         </div>
         <div class="header-right">
+          <button class="share-button" id="shareButton" aria-label="Compartir">
+            <i class="fas fa-share-alt"></i>
+          </button>
           <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema">
             <i class="fas fa-moon" id="moonIcon"></i>
             <i class="fas fa-sun" id="sunIcon" style="display: none;"></i>
           </button>
-          <button class="share-button" id="shareButton" aria-label="Compartir">
-            <i class="fas fa-share-alt"></i>
+          <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">
+            <span></span>
+            <span></span>
+            <span></span>
           </button>
         </div>
       </div>
     </header>
+
+    <!-- Menú desplegable moderno y unificado -->
+    <div class="side-menu" id="sideMenu">
+      <div class="side-menu-header">
+        <img src="assets/logo.webp" alt="Plan B" class="side-menu-logo">
+        <button class="close-menu" id="closeMenu" aria-label="Cerrar menú">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="side-menu-section">
+        <div class="side-menu-section-title">Navegación</div>
+        <nav class="side-menu-nav">
+          <a href="index.html" class="side-menu-link active">
+            <i class="fas fa-tv"></i>
+            <span>Canales en Vivo</span>
+          </a>
+        
+        </nav>
+      </div>
+
+      <div class="side-menu-section">
+        <div class="side-menu-section-title">Acciones rápidas</div>
+        <nav class="side-menu-nav">
+          <a href="#" class="side-menu-link" id="shareLink">
+            <i class="fas fa-share-alt"></i>
+            <span>Compartir</span>
+          </a>
+          <a href="#" class="side-menu-link" id="favoriteLink">
+            <i class="fas fa-heart"></i>
+            <span>Añadir a favoritos</span>
+          </a>
+          <a href="index.html" class="side-menu-link">
+            <i class="fas fa-arrow-left"></i>
+            <span>Volver a canales</span>
+          </a>
+          <button class="side-menu-link theme-toggle" id="mobileThemeToggle" aria-label="Cambiar tema">
+            <i class="fas fa-moon"></i>
+            <span>Cambiar tema</span>
+          </button>
+        </nav>
+      </div>
+
+      <div class="side-menu-footer">
+        <p class="side-menu-version">Plan B v1.0</p>
+      </div>
+    </div>
+    <div class="side-menu-overlay" id="sideMenuOverlay"></div>
 
     <main class="container main-content">
       <div class="loading-spinner" id="loadingSpinner">
@@ -60,13 +114,13 @@
                 <div class="video-container" id="videoContainer">
                   <!-- Default video element -->
                   <video id="videoElement" controls playsinline>
-                    <source src="" type="video/mp4" id="videoSource">
+                    <source src="/placeholder.svg" type="video/mp4" id="videoSource">
                     Tu navegador no soporta la reproducción de videos.
                   </video>
 
                   <!-- Iframe for external players -->
                   <iframe id="videoIframe" width="100%" style="aspect-ratio:16/9" name="iframe" title="Live Video"
-                    frameborder="0" allow="autoplay; encrypted-media" allowfullscreen src="" scrolling="no"></iframe>
+                    frameborder="0" allow="autoplay; encrypted-media" allowfullscreen src="/placeholder.svg" scrolling="no"></iframe>
                 </div>
               </div>
             </div>
@@ -104,7 +158,6 @@
       </div>
     </main>
 
-
     <div class="share-modal" id="shareModal">
       <div class="share-modal-content">
         <div class="share-modal-header">
@@ -136,6 +189,66 @@
         </div>
       </div>
     </div>
+
+
+    <!-- Botón de volver arriba -->
+    <button class="scroll-to-top" id="scrollToTop" aria-label="Volver arriba">
+      <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Nuevo footer mejorado -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-logo">
+            <img src="assets/logo.webp" alt="Plan B" class="footer-logo-img">
+            <p>Tu plataforma de streaming preferida con los mejores canales en vivo y series exclusivas.</p>
+            <div class="footer-social">
+              <a href="#" aria-label="Facebook" class="social-icon">
+                <i class="fab fa-facebook-f"></i>
+              </a>
+              <a href="#" aria-label="Twitter" class="social-icon">
+                <i class="fab fa-twitter"></i>
+              </a>
+              <a href="#" aria-label="Instagram" class="social-icon">
+                <i class="fab fa-instagram"></i>
+              </a>
+              <a href="#" aria-label="YouTube" class="social-icon">
+                <i class="fab fa-youtube"></i>
+              </a>
+            </div>
+          </div>
+          
+          <div class="footer-links">
+            <h3>Enlaces Rápidos</h3>
+            <ul>
+              <li><a href="index.html">Canales en Vivo</a></li>
+              
+              <li><a href="#" id="footer-favorites">Mis Favoritos</a></li>
+              <li><a href="#" id="footer-recent">Vistos Recientemente</a></li>
+            </ul>
+          </div>
+          
+          <div class="footer-categories">
+            <h3>Categorías Populares</h3>
+            <div class="footer-categories-list" id="footerCategories">
+              <!-- Se llenará dinámicamente con JavaScript -->
+            </div>
+          </div>
+          
+          
+        
+        <div class="footer-bottom">
+          <p>&copy; 2023 Plan B. Todos los derechos reservados.</p>
+          <div class="footer-bottom-links">
+            <a href="#">Privacidad</a>
+            <a href="#">Términos</a>
+            <a href="#">Ayuda</a>
+            <a href="#">Contacto</a>
+          </div>
+        </div>
+      </div>
+    </footer>
   </div>
 
   <script src="js/canales-reproductor.js"></script>
